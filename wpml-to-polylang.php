@@ -2,13 +2,15 @@
 /*
 Plugin Name: WPML to Polylang
 Plugin URI:
-Version: 0.2
+Version: 0.2.1
 Author: Frédéric Demarle
 Description: imports WPML data into Polylang
+Text Domain: wpml-to-polylang
+Domain Path: /languages
 */
 
 /*
- * Copyright 2013-2015 Frédéric Demarle
+ * Copyright 2013-2016 Frédéric Demarle
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
