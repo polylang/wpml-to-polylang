@@ -3,8 +3,8 @@ Contributors: Chouby
 Donate link: https://polylang.pro
 Tags: Polylang, WPML, importer, multilingual, bilingual
 Requires at least: 3.5
-Tested up to: 4.3
-Stable tag: 0.2.1
+Tested up to: 4.6
+Stable tag: 0.2.2
 License: GPLv2 or later
 
 Import multilingual data from WPML into Polylang.
@@ -32,7 +32,7 @@ Although WPML data should not be corrupted, as Polylang data are created without
 * De-activate WPML to Polylang (you can even delete it)
 * Setup a language switcher either as a widget or in nav menus
 * Check that everything is OK
-* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in Plugins table (it will delete all data created for Polylang) and then re-activate WPML
+* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in Plugins table (You can delete all data created for Polylang by checking the relevant option in Settings > Languages> Settings > Tools before deleting Polylang) and then re-activate WPML
 
 = Notes =
 
@@ -43,6 +43,10 @@ This plugin is still experimental and does not include error management. I teste
 The banner and icon were designed by [Alex Lopez](http://www.alexlopez.rocks/)
 
 == Changelog ==
+
+= 0.2.2 (2016-09-12) =
+
+* Fix: Don't import the empty strings translations as it breaks Polylang
 
 = 0.2.1 (2016-05-06) =
 

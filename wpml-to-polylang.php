@@ -2,7 +2,7 @@
 /*
 Plugin Name: WPML to Polylang
 Plugin URI:
-Version: 0.2.1
+Version: 0.2.2
 Author: Frédéric Demarle
 Description: imports WPML data into Polylang
 Text Domain: wpml-to-polylang
@@ -29,12 +29,10 @@ Domain Path: /languages
  *
  */
 
-/*
- * a class to manage migration from WPML to Polylang
+/**
+ * A class to manage migration from WPML to Polylang
  * needs Polylang 1.5 or later
  * needs WP 3.5 or later
- * tested only with WPML 2.0.4.1
- * FIXME: tested only on single site install
  *
  * @since 0.1
  *
@@ -43,13 +41,13 @@ Domain Path: /languages
 class WPML_To_Polylang {
 	public $model, $icl_settings;
 
-	/*
-	 * constructor
+	/**
+	 * Constructor
 	 *
 	 * @since 0.1
 	 */
 	public function __construct() {
-		// adds the link to the languages panel in the wordpress admin menu
+		// Adds the link to the languages panel in the wordpress admin menu
 		add_action( 'admin_menu', array( &$this, 'add_menus' ) );
 
 		if ( is_admin() && isset( $_GET['page'] ) && 'wpml-importer' === $_GET['page'] && class_exists( 'PLL_Admin_Model' ) ) {
@@ -58,8 +56,8 @@ class WPML_To_Polylang {
 		}
 	}
 
-	/*
-	 * use PLL_Admin_Model to be able to create languages
+	/**
+	 * Use PLL_Admin_Model to be able to create languages
 	 *
 	 * @since 0.2
 	 *
@@ -70,8 +68,8 @@ class WPML_To_Polylang {
 		return 'PLL_Admin_Model';
 	}
 
-	/*
-	 * adds the link to the languages panel in the wordpress admin menu
+	/**
+	 * Adds the link to the languages panel in the wordpress admin menu
 	 *
 	 * @since 0.1
 	 */
@@ -81,9 +79,9 @@ class WPML_To_Polylang {
 		add_submenu_page( 'tools.php', $title , $title, 'manage_options', 'wpml-importer', array( &$this, 'tools_page' ) );
 	}
 
-	/*
-	 * displays the import page
-	 * processes the import action
+	/**
+	 * Displays the import page
+	 * Processes the import action
 	 *
 	 * @since 0.1
 	 */
@@ -159,8 +157,8 @@ class WPML_To_Polylang {
 		</div><!-- wrap --><?php
 	}
 
-	/*
-	 * dispatches the different import steps
+	/**
+	 * Dispatches the different import steps
 	 *
 	 * @since 0.1
 	 */
@@ -172,7 +170,7 @@ class WPML_To_Polylang {
 		$this->model = $GLOBALS['polylang']->model;
 		$this->add_languages();
 
-		// get WPML translations
+		// Get WPML translations
 		$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}icl_translations" );
 
 		$this->process_post_term_languages( $results );
@@ -184,20 +182,20 @@ class WPML_To_Polylang {
 		flush_rewrite_rules();
 	}
 
-	/*
-	 * creates the Polylang languages
+	/**
+	 * Creates the Polylang languages
 	 *
 	 * @since 0.1
 	 */
 	public function add_languages() {
 		global $wpdb;
 
-		// get Polylang predefined languages list
+		// Get Polylang predefined languages list
 		if ( defined( 'PLL_SETTINGS_INC' ) && file_exists( PLL_SETTINGS_INC . '/languages.php' ) ) {
 			include( PLL_SETTINGS_INC . '/languages.php' );
 		}
 
-		// get WPML languages
+		// Get WPML languages
 		$wpml_languages = $wpdb->get_results( "SELECT l.code AS slug, l.default_locale AS locale, lt.name
 			FROM {$wpdb->prefix}icl_languages AS l
 			INNER JOIN {$wpdb->prefix}icl_languages_translations AS lt ON l.code = lt.language_code
@@ -206,12 +204,12 @@ class WPML_To_Polylang {
 		foreach ( $wpml_languages as $lang ) {
 			$lang['rtl'] = in_array( $lang['slug'], array( 'ar', 'he', 'fa' ) ) ? 1 : 0; // backward compatibility with Polylang < 1.8
 			// FIXME WPML defines a language order ( since 2.8.1 ) http://wpml.org/2013/04/wpml-2-8/
-			// this is lost as I don't know how it is stored
+			// This is lost as I don't know how it is stored
 			$lang['term_group'] = 0;
 			$lang['no_default_cat'] = 1; // prevent the creation of a new default category
 
-			// we are using Polylang 1.8+
-			// we need a flag and can be more exhaustive for the rtl languages list
+			// We are using Polylang 1.8+
+			// We need a flag and can be more exhaustive for the rtl languages list
 			if ( isset( $languages[ $lang['locale'] ][4] ) ) {
 				$lang['rtl'] = 'rtl' === $languages[ $lang['locale'] ][3] ? 1 : 0;
 				$lang['flag'] = $languages[ $lang['locale'] ][4];
@@ -219,11 +217,11 @@ class WPML_To_Polylang {
 
 			$this->model->add_language( $lang );
 
-			// needed for Polylang 1.5 to remove 'language added' message that otherwise breaks the validation of the next language
+			// Needed for Polylang 1.5 to remove 'language added' message that otherwise breaks the validation of the next language
 			unset( $GLOBALS['wp_settings_errors'] );
 		}
 
-		// delete the translation group of the default category to avoid a conflict later
+		// Delete the translation group of the default category to avoid a conflict later
 		foreach ( get_terms( 'term_translations', array( 'hide_empty' => false, 'fields' => 'ids' ) ) as $term_id ) {
 			wp_delete_term( $term_id, 'term_translations' );
 		}
@@ -231,8 +229,8 @@ class WPML_To_Polylang {
 		$this->model->clean_languages_cache(); //update the languages list
 	}
 
-	/*
-	 * assigns languages to posts and terms
+	/**
+	 * Assigns languages to posts and terms
 	 *
 	 * @since 0.1
 	 *
@@ -247,7 +245,7 @@ class WPML_To_Polylang {
 			$languages[ $lang->slug ] = $lang;
 		}
 
-		// posts and terms languages
+		// Posts and terms languages
 		foreach ( $results as $r ) {
 			if ( ! empty( $r->language_code ) && ! empty( $languages[ $r->language_code ] ) ) {
 				if ( 0 === strpos( $r->element_type, 'post_' )  && $this->is_translated_post_type( substr( $r->element_type, 5 ) ) ) {
@@ -277,8 +275,8 @@ class WPML_To_Polylang {
 		}
 	}
 
-	/*
-	 * creates translations groups
+	/**
+	 * Creates translations groups
 	 *
 	 * @since 0.1
 	 *
@@ -291,16 +289,16 @@ class WPML_To_Polylang {
 			$languages[ $lang->slug ] = $lang;
 		}
 
-		// get the correspondance between term_taxonomy_id and term_id ( duplicates are discarded )
-		// needed as WPML stores term_taxonomy_id in icl_translations while Polylang translates term_id
-		// thanks to Nickness. See http://wordpress.org/support/topic/wpml-languages-import-is-broken-with-last-polylang-update-15-16
+		// Get the correspondance between term_taxonomy_id and term_id ( duplicates are discarded )
+		// Needed as WPML stores term_taxonomy_id in icl_translations while Polylang translates term_id
+		// Thanks to Nickness. See http://wordpress.org/support/topic/wpml-languages-import-is-broken-with-last-polylang-update-15-16
 		$taxonomies = array( 'category', 'post_tag', 'nav_menu' );
 		if ( ! empty( $this->icl_settings['taxonomies_sync_option'] ) ) {
 			$taxonomies = array_merge( $taxonomies, array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) ) );
 		}
 		$term_ids = $wpdb->get_results( "SELECT term_taxonomy_id, term_id FROM $wpdb->term_taxonomy WHERE taxonomy IN ('" . implode( "', '", $taxonomies ) . "')", OBJECT_K );
 
-		// arrange translations in a convenient way
+		// Arrange translations in a convenient way
 		foreach ( $results as $r ) {
 			if ( ! empty( $r->language_code ) && ! empty( $languages[ $r->language_code ] ) ) {
 				if ( 'tax_nav_menu' === $r->element_type ) {
@@ -334,29 +332,29 @@ class WPML_To_Polylang {
 
 			$terms = array_unique( $terms );
 
-			// insert terms
+			// Insert terms
 			if ( ! empty( $terms ) ) {
 				$wpdb->query( "INSERT INTO $wpdb->terms (slug, name) VALUES " . implode( ',', $terms ) );
 			}
 
-			// get all terms with their term_id
+			// Get all terms with their term_id
 			$terms = $wpdb->get_results( "SELECT term_id, slug FROM $wpdb->terms WHERE slug IN (" . implode( ',', $slugs ) . ")" );
 
-			// prepare terms taxonomy relationship
+			// Prepare terms taxonomy relationship
 			foreach ( $terms as $term ) {
 				$tts[] = $wpdb->prepare( '(%d, "%s", "%s", %d)', $term->term_id, $type . '_translations', $description[ $term->slug ], $count[ $term->slug ] );
 			}
 			$tts = array_unique( $tts );
 
-			// insert term_taxonomy
+			// Insert term_taxonomy
 			if ( ! empty( $tts ) ) {
 				$wpdb->query( "INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, count) VALUES " . implode( ',', $tts ) );
 			}
 
-			// get all terms with term_taxonomy_id
+			// Get all terms with term_taxonomy_id
 			$terms = get_terms( $type . '_translations', array( 'hide_empty' => false ) );
 
-			// prepare objects relationships
+			// Prepare objects relationships
 			foreach ( $terms as $term ) {
 				$translations = unserialize( $term->description );
 				foreach ( $translations as $object_id ) {
@@ -368,13 +366,13 @@ class WPML_To_Polylang {
 
 			$trs = array_unique( $trs );
 
-			// insert term_relationships
+			// Insert term_relationships
 			if ( ! empty( $trs ) ) {
 				$wpdb->query( "INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode( ',', $trs ) );
 			}
 		}
 
-		// nav menus
+		// Nav menus
 		// Important: needs Polylang 1.2.3+
 		$options = get_option( 'polylang' );
 		$theme = get_option( 'stylesheet' );
@@ -392,25 +390,27 @@ class WPML_To_Polylang {
 		update_option( 'polylang', $options );
 	}
 
-	/*
-	 * adds strings translations
+	/**
+	 * Adds strings translations
 	 *
 	 * @since 0.1
 	 */
 	public function process_strings_translations() {
 		global $wpdb;
 
-		// get WPML string translations
+		// Get WPML string translations
 		 $results = $wpdb->get_results( "SELECT s.value AS string, st.language, st.value AS translation
 			FROM {$wpdb->prefix}icl_strings AS s
 			INNER JOIN {$wpdb->prefix}icl_string_translations AS st ON st.string_id = s.id" );
 
-		// order them in a convenient way
+		// Order them in a convenient way
 		foreach ( $results as $st ) {
-			$string_translations[ $st->language ][] = array( $st->string, $st->translation );
+			if ( ! empty( $st->string ) ) {
+				$string_translations[ $st->language ][] = array( $st->string, $st->translation );
+			}
 		}
 
-		// save Polylang string translations
+		// Save Polylang string translations
 		if ( isset( $string_translations ) ) {
 			foreach ( $string_translations as $lang => $strings ) {
 				$mo = new PLL_MO();
@@ -422,22 +422,22 @@ class WPML_To_Polylang {
 		}
 	}
 
-	/*
-	 * defines Polylang options
+	/**
+	 * Defines Polylang options
 	 *
 	 * @since 0.1
 	 */
 	public function process_options() {
 		$options = get_option( 'polylang' );
 
-		$options['rewrite'] = 1; // remove /language/ in permalinks ( was the opposite before 0.7.2 )
-		$options['hide_default'] = 1; // remove URL language information for default language
-		$options['redirect_lang'] = 1; // redirect the language page to the homepage
+		$options['rewrite'] = 1; // Remove /language/ in permalinks ( was the opposite before 0.7.2 )
+		$options['hide_default'] = 1; // Remove URL language information for default language
+		$options['redirect_lang'] = 1; // Redirect the language page to the homepage
 
-		// default language
+		// Default language
 		$options['default_lang'] = $this->icl_settings['default_language'];
 
-		// urls modifications
+		// Urls modifications
 		switch ( $this->icl_settings['language_negotiation_type'] ) {
 			case 1:
 				$options['force_lang'] = 1;
@@ -451,20 +451,20 @@ class WPML_To_Polylang {
 			break;
 		}
 
-		// domains
+		// Domains
 		$options['domains'] = isset( $this->icl_settings['language_domains'] ) ? $this->icl_settings['language_domains'] : array();
 
-		// post types
+		// Post types
 		if ( ! empty( $this->icl_settings['custom_posts_sync_option'] ) ) {
 			$options['post_types'] = array_keys( array_filter( $this->icl_settings['custom_posts_sync_option'] ) );
 		}
 
-		// taxonomies
+		// Taxonomies
 		if ( ! empty( $this->icl_settings['taxonomies_sync_option'] ) ) {
 			$options['taxonomies'] = array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) );
 		}
 
-		// sync
+		// Sync
 		$sync = array(
 			'sync_page_ordering'  => 'menu_order',
 			'sync_page_parent'    => 'post_parent',
@@ -482,12 +482,12 @@ class WPML_To_Polylang {
 		}
 		update_option( 'polylang', $options );
 
-		// default category in default language
+		// Default category in default language
 		update_option( 'default_category', $default = (int) $this->icl_settings['default_categories'][ $this->icl_settings['default_language'] ] );
 	}
 
 	/*
-	 * returns true if WPML manages post type language and translation
+	 * Returns true if WPML manages post type language and translation
 	 *
 	 * @since 0.1
 	 *
@@ -499,7 +499,7 @@ class WPML_To_Polylang {
 	}
 
 	/*
-	 * returns true if WPML manages taxonomy language and translation
+	 * Returns true if WPML manages taxonomy language and translation
 	 *
 	 * @since 0.1
 	 *
