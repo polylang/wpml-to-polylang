@@ -185,6 +185,16 @@ class WPML_To_Polylang {
 		$this->process_post_term_languages( $results, $term_ids );
 		$this->process_post_term_translations( $results, $term_ids );
 
+		// In some cases, there is no language assigned in icl_translations table, but WPML displays the default language anyway
+		if ( $nolang = $this->model->get_objects_with_no_lang() ) {
+			if ( ! empty( $nolang['posts'] ) ) {
+				$this->model->set_language_in_mass( 'post', $nolang['posts'], $this->icl_settings['default_language'] );
+			}
+			if ( ! empty( $nolang['terms'] ) ) {
+				$this->model->set_language_in_mass( 'term', $nolang['terms'], $this->icl_settings['default_language'] );
+			}
+		}
+
 		$this->process_strings_translations();
 		$this->process_options();
 
