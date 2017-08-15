@@ -1,4 +1,5 @@
 <?php
+
 /*
 Plugin Name: WPML to Polylang
 Plugin URI:
@@ -47,7 +48,7 @@ class WPML_To_Polylang {
 	 * @since 0.1
 	 */
 	public function __construct() {
-		// Adds the link to the languages panel in the wordpress admin menu
+		// Adds the link to the languages panel in the WordPress admin menu
 		add_action( 'admin_menu', array( &$this, 'add_menus' ) );
 
 		if ( is_admin() && isset( $_GET['page'] ) && 'wpml-importer' === $_GET['page'] && class_exists( 'PLL_Admin_Model' ) ) {
@@ -69,12 +70,12 @@ class WPML_To_Polylang {
 	}
 
 	/**
-	 * Adds the link to the languages panel in the wordpress admin menu
+	 * Adds the link to the languages panel in the WordPress admin menu
 	 *
 	 * @since 0.1
 	 */
 	public function add_menus() {
-		load_plugin_textdomain( 'wpml-to-polylang', false, basename( dirname( __FILE__ ) ).'/languages' ); // plugin i18n
+		load_plugin_textdomain( 'wpml-to-polylang', false, basename( dirname( __FILE__ ) ) . '/languages' ); // Plugin i18n
 		$title = __( 'WPML importer', 'wpml-to-polylang' );
 		add_submenu_page( 'tools.php', $title , $title, 'manage_options', 'wpml-importer', array( &$this, 'tools_page' ) );
 	}
@@ -85,15 +86,19 @@ class WPML_To_Polylang {
 	 *
 	 * @since 0.1
 	 */
-	public function tools_page() { ?>
+	public function tools_page() {
+		?>
 		<div class="wrap">
 			<?php screen_icon( 'tools' ); ?>
-			<h2>WPML Importer</h2><?php
+			<h2>WPML Importer</h2>
+			<?php
 
 			if ( isset( $_POST['pll_action'] ) && 'import' == $_POST['pll_action'] ) {
 				check_admin_referer( 'wpml-importer', '_wpnonce_wpml-importer' );
-				$this->import(); ?>
-				<p><?php _e( 'Import from WPML to Polylang should have been successul!', 'wpml-to-polylang' ); ?></p><?php
+				$this->import();
+				?>
+				<p><?php _e( 'Import from WPML to Polylang should have been successul!', 'wpml-to-polylang' ); ?></p>
+				<?php
 			}
 
 			else {
@@ -103,24 +108,26 @@ class WPML_To_Polylang {
 				$min_pll_version = '1.5';
 
 				$checks[] = array(
+					/* translators: %s is the WordPress version */
 					sprintf( __( 'You are using WordPress %s or later', 'wpml-to-polylang' ), $min_wp_version ),
 					version_compare( $wp_version, $min_wp_version, '>=' ) ? 1 : 0,
-				 );
+				);
 
 				$checks[] = array(
 					__( 'WPML is installed on this website', 'wpml-to-polylang' ),
 					false !== get_option( 'icl_sitepress_settings' ) ? 1 : 0,
-				 );
+				);
 
 				$checks[] = array(
 					__( 'WPML is deactivated', 'wpml-to-polylang' ),
 					empty( $sitepress ) ? 1 : 0,
-				 );
+				);
 
 				$checks[] = array(
+					/* translators: %s is the Polylang version */
 					sprintf( __( 'Polylang %s or later is activated', 'wpml-to-polylang' ), $min_pll_version ),
 					defined( 'POLYLANG_VERSION' ) && version_compare( POLYLANG_VERSION, $min_pll_version, '>=' ) ? 1 : 0,
-				 );
+				);
 
 				if ( $checks[3][1] ) {
 					$this->model = $GLOBALS['polylang']->model;
@@ -130,13 +137,15 @@ class WPML_To_Polylang {
 						$this->model->get_languages_list() ? 0 : 1,
 					);
 				}
-				// html form?>
 
+				// html form
+				?>
 				<div class="form-wrap">
 					<form id="import" method="post" action="admin.php?page=wpml-importer">
-					<input type="hidden" name="pll_action" value="import" /><?php
-					wp_nonce_field( 'wpml-importer', '_wpnonce_wpml-importer' );?>
-					<table class="form-table"><?php
+					<input type="hidden" name="pll_action" value="import" />
+					<?php wp_nonce_field( 'wpml-importer', '_wpnonce_wpml-importer' ); ?>
+					<table class="form-table">
+					<?php
 					foreach ( $checks as $check ) {
 						printf( '<tr><th style="width:300px">%s</th><td style="color:%s">%s</td></tr>',
 							$check[0],
@@ -147,14 +156,20 @@ class WPML_To_Polylang {
 						if ( ! $check[1] ) {
 							$deactivated = true;
 						}
-					}?>
-					</table><?php
+					}
+					?>
+					</table>
+					<?php
 					$attr = empty( $deactivated ) ? array() : array( 'disabled' => 'disabled' );
-					submit_button( __( 'Import' ), 'primary', 'submit', true, $attr ); // since WP 3.1 ?>
+					submit_button( __( 'Import' ), 'primary', 'submit', true, $attr ); // since WP 3.1
+					?>
 					</form>
-				</div><!-- form-wrap --><?php
-			} ?>
-		</div><!-- wrap --><?php
+				</div><!-- form-wrap -->
+				<?php
+			}
+			?>
+		</div><!-- wrap -->
+		<?php
 	}
 
 	/**
@@ -221,11 +236,11 @@ class WPML_To_Polylang {
 			WHERE l.active = 1 AND lt.language_code = lt.display_language_code", ARRAY_A );
 
 		foreach ( $wpml_languages as $lang ) {
-			$lang['rtl'] = in_array( $lang['slug'], array( 'ar', 'he', 'fa' ) ) ? 1 : 0; // backward compatibility with Polylang < 1.8
+			$lang['rtl'] = in_array( $lang['slug'], array( 'ar', 'he', 'fa' ) ) ? 1 : 0; // Backward compatibility with Polylang < 1.8
 			// FIXME WPML defines a language order ( since 2.8.1 ) http://wpml.org/2013/04/wpml-2-8/
 			// This is lost as I don't know how it is stored
 			$lang['term_group'] = 0;
-			$lang['no_default_cat'] = 1; // prevent the creation of a new default category
+			$lang['no_default_cat'] = 1; // Prevent the creation of a new default category
 
 			// We are using Polylang 1.8+
 			// We need a flag and can be more exhaustive for the rtl languages list
@@ -245,7 +260,7 @@ class WPML_To_Polylang {
 			wp_delete_term( $term_id, 'term_translations' );
 		}
 
-		$this->model->clean_languages_cache(); //update the languages list
+		$this->model->clean_languages_cache(); // Update the languages list
 	}
 
 	/**
@@ -268,7 +283,7 @@ class WPML_To_Polylang {
 		// Posts and terms languages
 		foreach ( $results as $r ) {
 			if ( ! empty( $r->language_code ) && ! empty( $languages[ $r->language_code ] ) ) {
-				if ( 0 === strpos( $r->element_type, 'post_' )  && $this->is_translated_post_type( substr( $r->element_type, 5 ) ) ) {
+				if ( 0 === strpos( $r->element_type, 'post_' ) && $this->is_translated_post_type( substr( $r->element_type, 5 ) ) ) {
 					$post_languages[] = $wpdb->prepare( '(%d, %d)', (int) $r->element_id, (int) $languages[ $r->language_code ]->term_taxonomy_id );
 				}
 
@@ -453,14 +468,14 @@ class WPML_To_Polylang {
 		switch ( $this->icl_settings['language_negotiation_type'] ) {
 			case 1:
 				$options['force_lang'] = 1;
-			break;
+				break;
 			case 2:
 				$options['force_lang'] = 3;
-			break;
+				break;
 			case 3:
 			default:
 				$options['force_lang'] = 0;
-			break;
+				break;
 		}
 
 		// Domains
@@ -484,7 +499,7 @@ class WPML_To_Polylang {
 			'sync_ping_status'    => 'ping_status',
 			'sync_comment_status' => 'comment_status',
 			'sync_sticky_flag'    => 'sticky_posts',
-		 );
+		);
 
 		$options['sync'] = array();
 		foreach ( $sync as $wpml_opt => $pll_opt ) {
@@ -498,7 +513,7 @@ class WPML_To_Polylang {
 		update_option( 'default_category', $default = (int) $this->icl_settings['default_categories'][ $this->icl_settings['default_language'] ] );
 	}
 
-	/*
+	/**
 	 * Returns true if WPML manages post type language and translation
 	 *
 	 * @since 0.1
@@ -510,7 +525,7 @@ class WPML_To_Polylang {
 		return in_array( $type, array( 'post', 'page' ) ) || ! empty( $this->icl_settings['custom_posts_sync_option'][ $type ] );
 	}
 
-	/*
+	/**
 	 * Returns true if WPML manages taxonomy language and translation
 	 *
 	 * @since 0.1
