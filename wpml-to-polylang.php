@@ -173,8 +173,17 @@ class WPML_To_Polylang {
 		// Get WPML translations
 		$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}icl_translations" );
 
-		$this->process_post_term_languages( $results );
-		$this->process_post_term_translations( $results );
+		// Get the correspondance between term_taxonomy_id and term_id ( duplicates are discarded )
+		// Needed as WPML stores term_taxonomy_id in icl_translations while Polylang translates term_id
+		// Thanks to Nickness. See http://wordpress.org/support/topic/wpml-languages-import-is-broken-with-last-polylang-update-15-16
+		$taxonomies = array( 'category', 'post_tag', 'nav_menu' );
+		if ( ! empty( $this->icl_settings['taxonomies_sync_option'] ) ) {
+			$taxonomies = array_merge( $taxonomies, array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) ) );
+		}
+		$term_ids = $wpdb->get_results( "SELECT term_taxonomy_id, term_id FROM $wpdb->term_taxonomy WHERE taxonomy IN ('" . implode( "', '", $taxonomies ) . "')", OBJECT_K );
+
+		$this->process_post_term_languages( $results, $term_ids );
+		$this->process_post_term_translations( $results, $term_ids );
 
 		$this->process_strings_translations();
 		$this->process_options();
@@ -234,9 +243,10 @@ class WPML_To_Polylang {
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $results icl_translations table entries
+	 * @param array $results  icl_translations table entries
+	 * @param array $term_ids correspondances between term_id and term_taxonomy_id
 	 */
-	public function process_post_term_languages( &$results ) {
+	public function process_post_term_languages( $results, $term_ids ) {
 		global $wpdb;
 
 		$default_cat = (int) get_option( 'default_category' );
@@ -249,11 +259,11 @@ class WPML_To_Polylang {
 		foreach ( $results as $r ) {
 			if ( ! empty( $r->language_code ) && ! empty( $languages[ $r->language_code ] ) ) {
 				if ( 0 === strpos( $r->element_type, 'post_' )  && $this->is_translated_post_type( substr( $r->element_type, 5 ) ) ) {
-					$post_languages[] = $wpdb->prepare( '(%d, %d)', $r->element_id, $languages[ $r->language_code ]->term_taxonomy_id );
+					$post_languages[] = $wpdb->prepare( '(%d, %d)', (int) $r->element_id, (int) $languages[ $r->language_code ]->term_taxonomy_id );
 				}
 
-				if ( 0 === strpos( $r->element_type, 'tax_' ) && $this->is_translated_taxonomy( substr( $r->element_type, 4 ) ) && $r->element_id != $default_cat ) {
-					$term_languages[] = $wpdb->prepare( '(%d, %d)', $r->element_id, $languages[ $r->language_code ]->tl_term_taxonomy_id );
+				if ( 0 === strpos( $r->element_type, 'tax_' ) && $this->is_translated_taxonomy( substr( $r->element_type, 4 ) ) && $term_ids[ $r->element_id ]->term_id != $default_cat ) {
+					$term_languages[] = $wpdb->prepare( '(%d, %d)', (int) $term_ids[ $r->element_id ]->term_id, (int) $languages[ $r->language_code ]->tl_term_taxonomy_id );
 				}
 			}
 		}
@@ -281,22 +291,14 @@ class WPML_To_Polylang {
 	 * @since 0.1
 	 *
 	 * @param array $results icl_translations table entries
+	 * @param array $term_ids correspondances between term_id and term_taxonomy_id
 	 */
-	public function process_post_term_translations( &$results ) {
+	public function process_post_term_translations( $results, $term_ids ) {
 		global $wpdb;
 
 		foreach ( $this->model->get_languages_list() as $lang ) {
 			$languages[ $lang->slug ] = $lang;
 		}
-
-		// Get the correspondance between term_taxonomy_id and term_id ( duplicates are discarded )
-		// Needed as WPML stores term_taxonomy_id in icl_translations while Polylang translates term_id
-		// Thanks to Nickness. See http://wordpress.org/support/topic/wpml-languages-import-is-broken-with-last-polylang-update-15-16
-		$taxonomies = array( 'category', 'post_tag', 'nav_menu' );
-		if ( ! empty( $this->icl_settings['taxonomies_sync_option'] ) ) {
-			$taxonomies = array_merge( $taxonomies, array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) ) );
-		}
-		$term_ids = $wpdb->get_results( "SELECT term_taxonomy_id, term_id FROM $wpdb->term_taxonomy WHERE taxonomy IN ('" . implode( "', '", $taxonomies ) . "')", OBJECT_K );
 
 		// Arrange translations in a convenient way
 		foreach ( $results as $r ) {
