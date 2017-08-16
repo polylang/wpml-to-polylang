@@ -3,8 +3,8 @@ Contributors: Chouby
 Donate link: https://polylang.pro
 Tags: Polylang, WPML, importer, multilingual, bilingual
 Requires at least: 3.5
-Tested up to: 4.6
-Stable tag: 0.2.2
+Tested up to: 4.8
+Stable tag: 0.2.3
 License: GPLv2 or later
 
 Import multilingual data from WPML into Polylang.
@@ -32,17 +32,25 @@ Although WPML data should not be corrupted, as Polylang data are created without
 * De-activate WPML to Polylang (you can even delete it)
 * Setup a language switcher either as a widget or in nav menus
 * Check that everything is OK
-* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in Plugins table (You can delete all data created for Polylang by checking the relevant option in Settings > Languages> Settings > Tools before deleting Polylang) and then re-activate WPML
+* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in the Plugins table (You can delete all data created for Polylang by checking the relevant option in Settings > Languages> Settings > Tools before deleting Polylang) and then re-activate WPML
 
 = Notes =
 
-This plugin is still experimental and does not include error management. I tested successfully to migrate a small site from WPML 2.0.4.1. I did not test newer versions of WPML, but a user reported a successful migration from WPML 3.1.5. Multisite has not been tested either. Thanks to report your experience (successful or not) with different versions of WPML in the support forum.
+This plugin is still experimental and does not include error management. I however tested it successfully to migrate a site with about 9,000 posts and media from WPML 3.7.
+As everything is processed in one unique step, big sites may require to tweak the PHP memory limit and MySQL buffer size.
+Multisite has not been tested.
 
 = Credits =
 
 The banner and icon were designed by [Alex Lopez](http://www.alexlopez.rocks/)
 
 == Changelog ==
+
+= 0.2.3 (2017-08-16) =
+
+* Assign the default language to objects without language in the 'icl_translations' table
+* Fix term languages not correctly imported
+* Fix unprepared SQL query (thanks to @grapplerulrich)
 
 = 0.2.2 (2016-09-12) =
 
