@@ -191,12 +191,16 @@ class WPML_To_Polylang {
 		// Get the correspondance between term_taxonomy_id and term_id ( duplicates are discarded )
 		// Needed as WPML stores term_taxonomy_id in icl_translations while Polylang translates term_id
 		// Thanks to Nickness. See http://wordpress.org/support/topic/wpml-languages-import-is-broken-with-last-polylang-update-15-16
-		$taxonomies = array( 'category', 'post_tag', 'nav_menu' );
+		$_taxonomies = array( 'category', 'post_tag', 'nav_menu' );
 		if ( ! empty( $this->icl_settings['taxonomies_sync_option'] ) ) {
-			$taxonomies = array_merge( $taxonomies, array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) ) );
+			$_taxonomies = array_merge( $_taxonomies, array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) ) );
 		}
-		$term_ids = $wpdb->get_results( "SELECT term_taxonomy_id, term_id FROM $wpdb->term_taxonomy WHERE taxonomy IN ('" . implode( "', '", $taxonomies ) . "')", OBJECT_K );
+		foreach ( $_taxonomies as $tax ) {
+			$taxonomies[] = $wpdb->prepare( '"%s"', $tax );
+		}
+		$term_ids = $wpdb->get_results( "SELECT term_taxonomy_id, term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy IN (" . implode( ', ', $taxonomies ) . ')', OBJECT_K );
 
+		// Migrate languages and translations
 		$this->process_post_term_languages( $results, $term_ids );
 		$this->process_post_term_translations( $results, $term_ids );
 
@@ -210,6 +214,7 @@ class WPML_To_Polylang {
 			}
 		}
 
+		// Migrate strings translations and options
 		$this->process_strings_translations();
 		$this->process_options();
 
