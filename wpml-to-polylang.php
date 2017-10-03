@@ -370,7 +370,7 @@ class WPML_To_Polylang {
 			}
 
 			// Get all terms with their term_id
-			$terms = $wpdb->get_results( "SELECT term_id, slug FROM $wpdb->terms WHERE slug IN (" . implode( ',', $slugs ) . ")" );
+			$terms = $wpdb->get_results( "SELECT term_id, slug FROM $wpdb->terms WHERE slug IN (" . implode( ',', $slugs ) . ')' );
 
 			// Prepare terms taxonomy relationship
 			foreach ( $terms as $term ) {
