@@ -3,7 +3,7 @@
 /*
 Plugin Name: WPML to Polylang
 Plugin URI:
-Version: 0.2.3
+Version: 0.2.4
 Author: Frédéric Demarle
 Description: imports WPML data into Polylang
 Text Domain: wpml-to-polylang

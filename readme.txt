@@ -4,7 +4,7 @@ Donate link: https://polylang.pro
 Tags: Polylang, WPML, importer, multilingual, bilingual
 Requires at least: 3.5
 Tested up to: 4.8
-Stable tag: 0.2.3
+Stable tag: 0.2.4
 License: GPLv2 or later
 
 Import multilingual data from WPML into Polylang.
@@ -45,6 +45,10 @@ Multisite has not been tested.
 The banner and icon were designed by [Alex Lopez](http://www.alexlopez.rocks/)
 
 == Changelog ==
+
+= 0.2.4 (2017-10-03) =
+
+* Fix incompatibility with WP 4.8.2 (placeholder %1$s in prepare)
 
 = 0.2.3 (2017-08-16) =
 
