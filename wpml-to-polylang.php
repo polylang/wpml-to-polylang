@@ -247,11 +247,15 @@ class WPML_To_Polylang {
 			$lang['term_group'] = 0;
 			$lang['no_default_cat'] = 1; // Prevent the creation of a new default category
 
-			// We are using Polylang 1.8+
 			// We need a flag and can be more exhaustive for the rtl languages list
 			if ( isset( $languages[ $lang['locale'] ][4] ) ) {
+				// We are using Polylang 1.8+
 				$lang['rtl'] = 'rtl' === $languages[ $lang['locale'] ][3] ? 1 : 0;
 				$lang['flag'] = $languages[ $lang['locale'] ][4];
+			} elseif ( isset( $languages[ $lang['locale'] ]['flag'] ) ) {
+				// We are using Polylang 2.3+
+				$lang['rtl'] = 'rtl' === $languages[ $lang['locale'] ]['dir'] ? 1 : 0;
+				$lang['flag'] = $languages[ $lang['locale'] ]['flag'];
 			}
 
 			$this->model->add_language( $lang );
