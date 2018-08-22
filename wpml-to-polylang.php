@@ -52,7 +52,7 @@ class WPML_To_Polylang {
 		add_action( 'admin_menu', array( &$this, 'add_menus' ) );
 
 		if ( is_admin() && isset( $_GET['page'] ) && 'wpml-importer' === $_GET['page'] && class_exists( 'PLL_Admin_Model' ) ) {
-			add_filter( 'pll_model' , array( &$this, 'pll_model' ) );
+			add_filter( 'pll_model', array( &$this, 'pll_model' ) );
 			$this->icl_settings = get_option( 'icl_sitepress_settings' );
 		}
 	}
@@ -77,7 +77,7 @@ class WPML_To_Polylang {
 	public function add_menus() {
 		load_plugin_textdomain( 'wpml-to-polylang', false, basename( dirname( __FILE__ ) ) . '/languages' ); // Plugin i18n
 		$title = __( 'WPML importer', 'wpml-to-polylang' );
-		add_submenu_page( 'tools.php', $title , $title, 'manage_options', 'wpml-importer', array( &$this, 'tools_page' ) );
+		add_submenu_page( 'tools.php', $title, $title, 'manage_options', 'wpml-importer', array( &$this, 'tools_page' ) );
 	}
 
 	/**
@@ -104,7 +104,7 @@ class WPML_To_Polylang {
 			else {
 				global $sitepress, $wp_version;
 
-				$min_wp_version = '3.5';
+				$min_wp_version  = '3.5';
 				$min_pll_version = '1.5';
 
 				$checks[] = array(
@@ -196,7 +196,7 @@ class WPML_To_Polylang {
 			$_taxonomies = array_merge( $_taxonomies, array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) ) );
 		}
 		foreach ( $_taxonomies as $tax ) {
-			$taxonomies[] = $wpdb->prepare( '"%s"', $tax );
+			$taxonomies[] = $wpdb->prepare( '%s', $tax );
 		}
 		$term_ids = $wpdb->get_results( "SELECT term_taxonomy_id, term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy IN (" . implode( ', ', $taxonomies ) . ')', OBJECT_K );
 
@@ -360,8 +360,8 @@ class WPML_To_Polylang {
 
 			foreach ( $icl_translations[ $type ] as $t ) {
 				$term = uniqid( 'pll_' ); // the term name
-				$terms[] = $wpdb->prepare( '("%s", "%s")', $term, $term );
-				$slugs[] = $wpdb->prepare( '"%s"', $term );
+				$terms[] = $wpdb->prepare( '(%s, %s)', $term, $term );
+				$slugs[] = $wpdb->prepare( '%s', $term );
 				$description[ $term ] = serialize( $t );
 				$count[ $term ] = count( $t );
 			}
@@ -378,7 +378,7 @@ class WPML_To_Polylang {
 
 			// Prepare terms taxonomy relationship
 			foreach ( $terms as $term ) {
-				$tts[] = $wpdb->prepare( '(%d, "%s", "%s", %d)', $term->term_id, $type . '_translations', $description[ $term->slug ], $count[ $term->slug ] );
+				$tts[] = $wpdb->prepare( '(%d, %s, %s, %d)', $term->term_id, $type . '_translations', $description[ $term->slug ], $count[ $term->slug ] );
 			}
 			$tts = array_unique( $tts );
 
@@ -435,7 +435,7 @@ class WPML_To_Polylang {
 		global $wpdb;
 
 		// Get WPML string translations
-		 $results = $wpdb->get_results( "SELECT s.value AS string, st.language, st.value AS translation
+		$results = $wpdb->get_results( "SELECT s.value AS string, st.language, st.value AS translation
 			FROM {$wpdb->prefix}icl_strings AS s
 			INNER JOIN {$wpdb->prefix}icl_string_translations AS st ON st.string_id = s.id" );
 
