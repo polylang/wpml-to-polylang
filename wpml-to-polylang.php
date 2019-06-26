@@ -89,7 +89,6 @@ class WPML_To_Polylang {
 	public function tools_page() {
 		?>
 		<div class="wrap">
-			<?php screen_icon( 'tools' ); ?>
 			<h2>WPML Importer</h2>
 			<?php
 
