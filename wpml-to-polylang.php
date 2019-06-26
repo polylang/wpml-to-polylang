@@ -89,14 +89,14 @@ class WPML_To_Polylang {
 	public function tools_page() {
 		?>
 		<div class="wrap">
-			<h2>WPML Importer</h2>
+			<h2> <?php esc_html_e( 'WPML Importer', 'wpml-to-polylang' ); ?></h2>
 			<?php
 
 			if ( isset( $_POST['pll_action'] ) && 'import' == $_POST['pll_action'] ) {
 				check_admin_referer( 'wpml-importer', '_wpnonce_wpml-importer' );
 				$this->import();
 				?>
-				<p><?php _e( 'Import from WPML to Polylang should have been successul!', 'wpml-to-polylang' ); ?></p>
+				<p><?php esc_html_e( 'Import from WPML to Polylang should have been successul!', 'wpml-to-polylang' ); ?></p>
 				<?php
 			}
 
@@ -147,9 +147,9 @@ class WPML_To_Polylang {
 					<?php
 					foreach ( $checks as $check ) {
 						printf( '<tr><th style="width:300px">%s</th><td style="color:%s">%s</td></tr>',
-							$check[0],
+							esc_html( $check[0] ),
 							$check[1] ? 'green' : 'red',
-							$check[1] ? __( 'OK', 'wpml-to-polylang' ) : __( 'KO', 'wpml-to-polylang' )
+							$check[1] ? esc_html__( 'OK', 'wpml-to-polylang' ) : esc_html__( 'KO', 'wpml-to-polylang' )
 						);
 
 						if ( ! $check[1] ) {
