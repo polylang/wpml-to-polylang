@@ -32,8 +32,8 @@ Domain Path: /languages
 
 /**
  * A class to manage migration from WPML to Polylang
- * needs Polylang 1.5 or later
- * needs WP 3.5 or later
+ * needs Polylang 1.6 or later
+ * needs WP 4.7 or later
  *
  * @since 0.1
  *
@@ -103,8 +103,8 @@ class WPML_To_Polylang {
 			else {
 				global $sitepress, $wp_version;
 
-				$min_wp_version  = '3.5';
-				$min_pll_version = '1.5';
+				$min_wp_version  = '4.7';
+				$min_pll_version = '2.6';
 
 				$checks[] = array(
 					/* translators: %s is the WordPress version */
@@ -230,7 +230,7 @@ class WPML_To_Polylang {
 
 		// Get Polylang predefined languages list
 		if ( defined( 'PLL_SETTINGS_INC' ) && file_exists( PLL_SETTINGS_INC . '/languages.php' ) ) {
-			include( PLL_SETTINGS_INC . '/languages.php' );
+			$languages = include PLL_SETTINGS_INC . '/languages.php';
 		}
 
 		// Get WPML languages
@@ -240,27 +240,16 @@ class WPML_To_Polylang {
 			WHERE l.active = 1 AND lt.language_code = lt.display_language_code", ARRAY_A );
 
 		foreach ( $wpml_languages as $lang ) {
-			$lang['rtl'] = in_array( $lang['slug'], array( 'ar', 'he', 'fa' ) ) ? 1 : 0; // Backward compatibility with Polylang < 1.8
 			// FIXME WPML defines a language order ( since 2.8.1 ) http://wpml.org/2013/04/wpml-2-8/
 			// This is lost as I don't know how it is stored
 			$lang['term_group'] = 0;
 			$lang['no_default_cat'] = 1; // Prevent the creation of a new default category
 
-			// We need a flag and can be more exhaustive for the rtl languages list
-			if ( isset( $languages[ $lang['locale'] ][4] ) ) {
-				// We are using Polylang 1.8+
-				$lang['rtl'] = 'rtl' === $languages[ $lang['locale'] ][3] ? 1 : 0;
-				$lang['flag'] = $languages[ $lang['locale'] ][4];
-			} elseif ( isset( $languages[ $lang['locale'] ]['flag'] ) ) {
-				// We are using Polylang 2.3+
-				$lang['rtl'] = 'rtl' === $languages[ $lang['locale'] ]['dir'] ? 1 : 0;
-				$lang['flag'] = $languages[ $lang['locale'] ]['flag'];
-			}
+			// We need a flag and can be more exhaustive for the rtl languages list.
+			$lang['rtl'] = 'rtl' === $languages[ $lang['locale'] ]['dir'] ? 1 : 0;
+			$lang['flag'] = $languages[ $lang['locale'] ]['flag'];
 
 			$this->model->add_language( $lang );
-
-			// Needed for Polylang 1.5 to remove 'language added' message that otherwise breaks the validation of the next language
-			unset( $GLOBALS['wp_settings_errors'] );
 		}
 
 		// Delete the translation group of the default category to avoid a conflict later
