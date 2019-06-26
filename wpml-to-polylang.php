@@ -217,6 +217,15 @@ class WPML_To_Polylang {
 		$this->process_strings_translations();
 		$this->process_options();
 
+		// Make sure that the page on front and page for posts are correctly included in the cached language objects.
+		if ( 'page' === get_option( 'show_on_front' ) ) {
+			wp_cache_delete( get_option( 'page_on_front' ), 'language_relationships' );
+			wp_cache_delete( get_option( 'page_on_front' ), 'post_translations_relationships' );
+			wp_cache_delete( get_option( 'page_for_posts' ), 'language_relationships' );
+			wp_cache_delete( get_option( 'page_for_posts' ), 'post_translations_relationships' );
+			$this->model->clean_languages_cache();
+		}
+
 		flush_rewrite_rules();
 	}
 
