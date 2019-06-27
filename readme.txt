@@ -5,7 +5,7 @@ Tags: Polylang, WPML, importer, multilingual, bilingual
 Requires at least: 3.5
 Tested up to: 4.9
 Stable tag: 0.2.5
-License: GPLv2 or later
+License: GPLv3 or later
 
 Import multilingual data from WPML into Polylang.
 
