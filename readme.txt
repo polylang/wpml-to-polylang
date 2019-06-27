@@ -2,9 +2,9 @@
 Contributors: Chouby
 Donate link: https://polylang.pro
 Tags: Polylang, WPML, importer, multilingual, bilingual
-Requires at least: 3.5
-Tested up to: 4.9
-Stable tag: 0.2.5
+Requires at least: 4.7
+Tested up to: 5.2
+Stable tag: 0.3
 License: GPLv3 or later
 
 Import multilingual data from WPML into Polylang.
@@ -26,25 +26,30 @@ Although WPML data should not be corrupted, as Polylang data are created without
 = How to proceed? =
 
 * De-activate WPML
-* Activate [Polylang](https://polylang.pro) and WPML to Polylang. Do *not* create any language with Polylang.
-* Go in Tools -> WPML Importer
+* Activate [Polylang](https://polylang.pro) and WPML to Polylang. Do **not** create any language with Polylang (they will be imported).
+* Go to Tools -> WPML Importer
 * If all checks are passed, you can click on 'Import'
 * De-activate WPML to Polylang (you can even delete it)
 * Setup a language switcher either as a widget or in nav menus
 * Check that everything is OK
-* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in the Plugins table (You can delete all data created for Polylang by checking the relevant option in Settings > Languages> Settings > Tools before deleting Polylang) and then re-activate WPML
+* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in the Plugins table (You can delete all data created for Polylang by checking the relevant option in Languages> Settings > Tools before deleting Polylang) and then re-activate WPML
 
 = Notes =
 
-This plugin is still experimental and does not include error management. I however tested it successfully to migrate a site with about 9,000 posts and media from WPML 3.7.
+This plugin is still experimental and does not include error management. I however tested it successfully to migrate a site with about 9,000 posts and media from WPML 3.7. It was also tested on multisite.
 As everything is processed in one unique step, big sites may require to tweak the PHP memory limit and MySQL buffer size.
-Multisite has not been tested.
 
 = Credits =
 
 The banner and icon were designed by [Alex Lopez](http://www.alexlopez.rocks/)
 
 == Changelog ==
+
+= 0.3 (2019-06-27) =
+
+* Min Polylang version is now 2.6 #3
+* Fix the front page label not displayed for translations in the pages list table #4
+* Fix deprecated notice related to the screen icon
 
 = 0.2.5 (2018-08-22) =
 
