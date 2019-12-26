@@ -358,7 +358,7 @@ class WPML_To_Polylang {
 		// Arrange translations in a convenient way.
 		foreach ( $results as $r ) {
 			if ( ! empty( $r->language_code ) && ! empty( $languages[ $r->language_code ] ) ) {
-				if ( 'tax_nav_menu' === $r->element_type ) {
+				if ( 'tax_nav_menu' === $r->element_type && ! empty( $term_ids[ $r->element_id ] ) ) {
 					$icl_translations['nav_menu'][ $r->trid ][ $r->language_code ] = (int) $term_ids[ $r->element_id ]->term_id;
 				}
 
@@ -366,7 +366,7 @@ class WPML_To_Polylang {
 					$icl_translations['post'][ $r->trid ][ $r->language_code ] = (int) $r->element_id;
 				}
 
-				if ( 0 === strpos( $r->element_type, 'tax_' ) && $this->is_translated_taxonomy( substr( $r->element_type, 4 ) ) ) {
+				if ( 0 === strpos( $r->element_type, 'tax_' ) && $this->is_translated_taxonomy( substr( $r->element_type, 4 ) ) && ! empty( $term_ids[ $r->element_id ] ) ) {
 					$icl_translations['term'][ $r->trid ][ $r->language_code ] = (int) $term_ids[ $r->element_id ]->term_id;
 				}
 			}
