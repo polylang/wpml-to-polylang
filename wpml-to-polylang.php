@@ -385,6 +385,11 @@ class WPML_To_Polylang {
 			}
 
 			foreach ( $icl_translations[ $type ] as $t ) {
+				$t = array_filter( $t ); // It looks like WPML can have 0 as translation id.
+				if ( empty( $t ) ) {
+					continue;
+				}
+
 				$term = uniqid( 'pll_' ); // The term name.
 				$terms[] = $wpdb->prepare( '(%s, %s)', $term, $term );
 				$slugs[] = $wpdb->prepare( '%s', $term );
