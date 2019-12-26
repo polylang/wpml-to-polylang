@@ -3,8 +3,8 @@ Contributors: Chouby
 Donate link: https://polylang.pro
 Tags: Polylang, WPML, importer, multilingual, bilingual
 Requires at least: 4.7
-Tested up to: 5.2
-Stable tag: 0.3
+Tested up to: 5.3
+Stable tag: 0.3.1
 License: GPLv3 or later
 
 Import multilingual data from WPML into Polylang.
@@ -44,6 +44,10 @@ As everything is processed in one unique step, big sites may require to tweak th
 The banner and icon were designed by [Alex Lopez](http://www.alexlopez.rocks/)
 
 == Changelog ==
+
+= 0.3.1 (2019-12-26) =
+
+* Fix PHP notices
 
 = 0.3 (2019-06-27) =
 
