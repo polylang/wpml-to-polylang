@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
 Plugin Name: WPML to Polylang
 Plugin URI:
 Version: 0.3
@@ -8,7 +8,7 @@ Author: Frédéric Demarle
 Description: imports WPML data into Polylang
 Text Domain: wpml-to-polylang
 Domain Path: /languages
-*/
+ */
 
 /*
  * Copyright 2013-2019 Frédéric Demarle
@@ -37,7 +37,20 @@ Domain Path: /languages
  * @see http://wpml.org/documentation/support/wpml-tables/
  */
 class WPML_To_Polylang {
-	public $model, $icl_settings;
+
+	/**
+	 * Instance of PLL_Model
+	 *
+	 * @var object
+	 */
+	protected $model;
+
+	/**
+	 * WPML settings
+	 *
+	 * @var array
+	 */
+	protected $icl_settings;
 
 	/**
 	 * Constructor
@@ -48,7 +61,7 @@ class WPML_To_Polylang {
 		// Adds the link to the languages panel in the WordPress admin menu.
 		add_action( 'admin_menu', array( $this, 'add_menus' ) );
 
-		if ( is_admin() && isset( $_GET['page'] ) && 'wpml-importer' === $_GET['page'] && class_exists( 'PLL_Admin_Model' ) ) {
+		if ( is_admin() && isset( $_GET['page'] ) && 'wpml-importer' === $_GET['page'] && class_exists( 'PLL_Admin_Model' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			add_filter( 'pll_model', array( $this, 'pll_model' ) );
 			$this->icl_settings = get_option( 'icl_sitepress_settings' );
 		}
@@ -99,6 +112,7 @@ class WPML_To_Polylang {
 
 				$min_wp_version  = '4.7';
 				$min_pll_version = '2.6';
+				$checks = array();
 
 				$checks[] = array(
 					/* translators: %s is the WordPress version */
@@ -155,7 +169,7 @@ class WPML_To_Polylang {
 					</table>
 					<?php
 					$attr = empty( $deactivated ) ? array() : array( 'disabled' => 'disabled' );
-					submit_button( __( 'Import' ), 'primary', 'submit', true, $attr ); // Since WP 3.1.
+					submit_button( __( 'Import', 'wpml-to-polylang' ), 'primary', 'submit', true, $attr ); // Since WP 3.1.
 					?>
 					</form>
 				</div><!-- form-wrap -->
@@ -191,17 +205,20 @@ class WPML_To_Polylang {
 		if ( ! empty( $this->icl_settings['taxonomies_sync_option'] ) ) {
 			$_taxonomies = array_merge( $_taxonomies, array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) ) );
 		}
+
+		$taxonomies = array();
 		foreach ( $_taxonomies as $tax ) {
 			$taxonomies[] = $wpdb->prepare( '%s', $tax );
 		}
-		$term_ids = $wpdb->get_results( "SELECT term_taxonomy_id, term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy IN (" . implode( ', ', $taxonomies ) . ')', OBJECT_K );
+		$term_ids = $wpdb->get_results( "SELECT term_taxonomy_id, term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy IN (" . implode( ', ', $taxonomies ) . ')', OBJECT_K ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		// Migrate languages and translations.
 		$this->process_post_term_languages( $results, $term_ids );
 		$this->process_post_term_translations( $results, $term_ids );
 
 		// In some cases, there is no language assigned in icl_translations table, but WPML displays the default language anyway.
-		if ( $nolang = $this->model->get_objects_with_no_lang() ) {
+		$nolang = $this->model->get_objects_with_no_lang();
+		if ( $nolang ) {
 			if ( ! empty( $nolang['posts'] ) ) {
 				$this->model->set_language_in_mass( 'post', $nolang['posts'], $this->icl_settings['default_language'] );
 			}
@@ -280,6 +297,10 @@ class WPML_To_Polylang {
 	public function process_post_term_languages( $results, $term_ids ) {
 		global $wpdb;
 
+		$languages = array();
+		$post_languages = array();
+		$term_languages = array();
+
 		$default_cat = (int) get_option( 'default_category' );
 
 		foreach ( $this->model->get_languages_list() as $lang ) {
@@ -293,7 +314,7 @@ class WPML_To_Polylang {
 					$post_languages[] = $wpdb->prepare( '(%d, %d)', (int) $r->element_id, (int) $languages[ $r->language_code ]->term_taxonomy_id );
 				}
 
-				if ( 0 === strpos( $r->element_type, 'tax_' ) && $this->is_translated_taxonomy( substr( $r->element_type, 4 ) ) && $term_ids[ $r->element_id ]->term_id != $default_cat ) {
+				if ( 0 === strpos( $r->element_type, 'tax_' ) && $this->is_translated_taxonomy( substr( $r->element_type, 4 ) ) && (int) $term_ids[ $r->element_id ]->term_id !== $default_cat ) {
 					$term_languages[] = $wpdb->prepare( '(%d, %d)', (int) $term_ids[ $r->element_id ]->term_id, (int) $languages[ $r->language_code ]->tl_term_taxonomy_id );
 				}
 			}
@@ -302,13 +323,13 @@ class WPML_To_Polylang {
 		$post_languages = array_unique( $post_languages );
 
 		if ( ! empty( $post_languages ) ) {
-			$wpdb->query( "INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode( ',', $post_languages ) );
+			$wpdb->query( "INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode( ',', $post_languages ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 
 		$term_languages = array_unique( $term_languages );
 
 		if ( ! empty( $term_languages ) ) {
-			$wpdb->query( "INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode( ',', $term_languages ) );
+			$wpdb->query( "INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode( ',', $term_languages ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 
 		foreach ( $this->model->get_languages_list() as $lang ) {
@@ -326,6 +347,9 @@ class WPML_To_Polylang {
 	 */
 	public function process_post_term_translations( $results, $term_ids ) {
 		global $wpdb;
+
+		$languages = array();
+		$icl_translations = array();
 
 		foreach ( $this->model->get_languages_list() as $lang ) {
 			$languages[ $lang->slug ] = $lang;
@@ -349,7 +373,12 @@ class WPML_To_Polylang {
 		}
 
 		foreach ( array( 'post', 'term' ) as $type ) {
-			$terms = $slugs = $tts = $trs = array();
+			$terms = array();
+			$slugs = array();
+			$description = array();
+			$count = array();
+			$tts = array();
+			$trs = array();
 
 			if ( empty( $icl_translations[ $type ] ) ) {
 				continue;
@@ -367,11 +396,11 @@ class WPML_To_Polylang {
 
 			// Insert terms.
 			if ( ! empty( $terms ) ) {
-				$wpdb->query( "INSERT INTO $wpdb->terms (slug, name) VALUES " . implode( ',', $terms ) );
+				$wpdb->query( "INSERT INTO $wpdb->terms (slug, name) VALUES " . implode( ',', $terms ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			}
 
 			// Get all terms with their term_id.
-			$terms = $wpdb->get_results( "SELECT term_id, slug FROM $wpdb->terms WHERE slug IN (" . implode( ',', $slugs ) . ')' );
+			$terms = $wpdb->get_results( "SELECT term_id, slug FROM $wpdb->terms WHERE slug IN (" . implode( ',', $slugs ) . ')' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 			// Prepare terms taxonomy relationship.
 			foreach ( $terms as $term ) {
@@ -381,7 +410,7 @@ class WPML_To_Polylang {
 
 			// Insert term_taxonomy.
 			if ( ! empty( $tts ) ) {
-				$wpdb->query( "INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, count) VALUES " . implode( ',', $tts ) );
+				$wpdb->query( "INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, count) VALUES " . implode( ',', $tts ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			}
 
 			// Get all terms with term_taxonomy_id.
@@ -401,7 +430,7 @@ class WPML_To_Polylang {
 
 			// Insert term_relationships.
 			if ( ! empty( $trs ) ) {
-				$wpdb->query( "INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode( ',', $trs ) );
+				$wpdb->query( "INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode( ',', $trs ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			}
 		}
 
@@ -430,6 +459,8 @@ class WPML_To_Polylang {
 	public function process_strings_translations() {
 		global $wpdb;
 
+		$string_translations = array();
+
 		// Get WPML string translations.
 		$results = $wpdb->get_results(
 			"SELECT s.value AS string, st.language, st.value AS translation
@@ -445,7 +476,7 @@ class WPML_To_Polylang {
 		}
 
 		// Save Polylang string translations.
-		if ( isset( $string_translations ) ) {
+		if ( ! empty( $string_translations ) ) {
 			foreach ( $string_translations as $lang => $strings ) {
 				$mo = new PLL_MO();
 				foreach ( $strings as $msg ) {
@@ -517,7 +548,7 @@ class WPML_To_Polylang {
 		update_option( 'polylang', $options );
 
 		// Default category in default language.
-		update_option( 'default_category', $default = (int) $this->icl_settings['default_categories'][ $this->icl_settings['default_language'] ] );
+		update_option( 'default_category', (int) $this->icl_settings['default_categories'][ $this->icl_settings['default_language'] ] );
 	}
 
 	/**
