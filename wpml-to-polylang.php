@@ -526,12 +526,16 @@ class WPML_To_Polylang {
 
 		// Post types.
 		if ( ! empty( $this->icl_settings['custom_posts_sync_option'] ) ) {
-			$options['post_types'] = array_keys( array_filter( $this->icl_settings['custom_posts_sync_option'] ) );
+			$post_types = array_keys( array_filter( $this->icl_settings['custom_posts_sync_option'] ) );
+			$post_types = array_diff( $post_types, array( 'post', 'page', 'attachment', 'wp_block' ) );
+			$options['post_types'] = $post_types;
 		}
 
 		// Taxonomies.
 		if ( ! empty( $this->icl_settings['taxonomies_sync_option'] ) ) {
-			$options['taxonomies'] = array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) );
+			$taxonomies = array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) );
+			$taxonomies = array_diff( $taxonomies, array( 'category', 'post_tag' ) );
+			$options['taxonomies'] = $taxonomies;
 		}
 
 		// Sync.
