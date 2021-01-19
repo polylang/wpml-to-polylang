@@ -10,7 +10,7 @@
  * Plugin name:          WPML to Polylang
  * Plugin URI:           https://polylang.pro
  * Description:          Import multilingual data from WPML into Polylang
- * Version:              0.4-dev
+ * Version:              0.4
  * Requires at least:    4.9
  * Requires PHP:         5.6
  * Author:               WP SYNTEX

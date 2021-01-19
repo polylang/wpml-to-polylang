@@ -2,9 +2,9 @@
 Contributors: Chouby
 Donate link: https://polylang.pro
 Tags: Polylang, WPML, importer, multilingual, bilingual
-Requires at least: 4.7
-Tested up to: 5.3
-Stable tag: 0.3.1
+Requires at least: 4.9
+Tested up to: 5.6
+Stable tag: 0.4
 License: GPLv3 or later
 
 Import multilingual data from WPML into Polylang.
@@ -13,11 +13,11 @@ Import multilingual data from WPML into Polylang.
 
 = Features =
 
-* Imports languages and WPML options (when the same options exist in Polylang)
-* Imports posts and terms languages as well as translations (including for custom post types and custom taxonomies)
-* Imports multilingual nav menus
-* Imports strings translations
-* Does not delete WPML data
+* Imports languages and WPML options (when the same options exist in Polylang).
+* Imports posts and terms languages as well as translations (including for custom post types and custom taxonomies).
+* Imports multilingual nav menus.
+* Imports strings translations.
+* Does not delete WPML data.
 
 = Important =
 
@@ -27,23 +27,30 @@ Although WPML data should not be corrupted, as Polylang data are created without
 
 * De-activate WPML
 * Activate [Polylang](https://polylang.pro) and WPML to Polylang. Do **not** create any language with Polylang (they will be imported).
-* Go to Tools -> WPML Importer
-* If all checks are passed, you can click on 'Import'
-* De-activate WPML to Polylang (you can even delete it)
-* Setup a language switcher either as a widget or in nav menus
-* Check that everything is OK
-* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in the Plugins table (You can delete all data created for Polylang by checking the relevant option in Languages> Settings > Tools before deleting Polylang) and then re-activate WPML
+* Go to Tools -> WPML Importer.
+* If all checks are passed, you can click on 'Import'.
+* De-activate WPML to Polylang (You can even delete it).
+* Setup a language switcher either as a widget or in nav menus.
+* Check that everything is OK.
+* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in the Plugins table (If you want to delete all data created for Polylang, you need to add `define( 'PLL_REMOVE_ALL_DATA', true );` **before** deleting Polylang) and then re-activate WPML.
 
 = Notes =
 
-This plugin is still experimental and does not include error management. I however tested it successfully to migrate a site with about 9,000 posts and media from WPML 3.7. It was also tested on multisite.
+This plugin does not include error management. It has however been tested successfully to migrate a site with about 9,000 posts and media.
 As everything is processed in one unique step, big sites may require to tweak the PHP memory limit and MySQL buffer size.
+It has been tested with WPML 4.4.8. It has also tested on multisite.
 
 = Credits =
 
 The banner and icon were designed by [Alex Lopez](http://www.alexlopez.rocks/)
 
 == Changelog ==
+
+= 0.4 (2021-01-19) =
+
+* Min Polylang version is now 2.8
+* Fix languages incorrectly imported with Polylang 2.8+
+* Fix media translation option incorrectly imported #7
 
 = 0.3.1 (2019-12-26) =
 
