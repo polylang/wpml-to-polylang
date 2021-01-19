@@ -3,7 +3,7 @@
 /**
 Plugin Name: WPML to Polylang
 Plugin URI:
-Version: 0.3.1
+Version: 0.4-dev
 Author: Frédéric Demarle
 Description: imports WPML data into Polylang
 Text Domain: wpml-to-polylang
@@ -28,9 +28,7 @@ Domain Path: /languages
  */
 
 /**
- * A class to manage migration from WPML to Polylang
- * needs Polylang 1.6 or later
- * needs WP 4.7 or later
+ * A class to manage migration from WPML to Polylang.
  *
  * @since 0.1
  *
@@ -110,8 +108,8 @@ class WPML_To_Polylang {
 			} else {
 				global $sitepress, $wp_version;
 
-				$min_wp_version  = '4.7';
-				$min_pll_version = '2.6';
+				$min_wp_version  = '4.9';
+				$min_pll_version = '2.8';
 				$checks = array();
 
 				$checks[] = array(
@@ -252,8 +250,8 @@ class WPML_To_Polylang {
 		global $wpdb;
 
 		// Get Polylang predefined languages list.
-		if ( defined( 'PLL_SETTINGS_INC' ) && file_exists( PLL_SETTINGS_INC . '/languages.php' ) ) {
-			$languages = include PLL_SETTINGS_INC . '/languages.php';
+		if ( defined( 'POLYLANG_DIR' ) && file_exists( POLYLANG_DIR . '/settings/languages.php' ) ) {
+			$languages = include POLYLANG_DIR . '/settings/languages.php';
 		}
 
 		// Get WPML languages.
