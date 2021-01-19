@@ -1,0 +1,15 @@
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+parameters:
+	level: max
+	paths:
+		- wpml-to-polylang.php
+	dynamicConstantNames:
+		- POLYLANG_VERSION
+	checkMissingIterableValueType: false
+	ignoreErrors:
+		- '#^Function apply_filters invoked with [34567] parameters, 2 required\.$#'
+		- '#^Function remove_filter invoked with [4567] parameters, 2-3 required\.$#'
+		- '#^Function remove_action invoked with [4567] parameters, 2-3 required\.$#'
+	bootstrapFiles:
+	- vendor/wpsyntex/polylang-stubs/bootstrap.php

@@ -1,0 +1,19 @@
+{
+	"name": "wpsyntex/wpml-to-polylang",
+	"description": "Import multilingual data from WPML into Polylang.",
+	"license": "GPL-3.0-or-later",
+	"homepage": "https://polylang.pro",
+	"type": "wordpress-plugin",
+	"require": {
+		"php": ">=5.6"
+	},
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "*",
+		"wp-coding-standards/wpcs": "*",
+		"automattic/vipwpcs": "*",
+		"phpcompatibility/phpcompatibility-wp": "*",
+		"szepeviktor/phpstan-wordpress": "*",
+		"php-stubs/woocommerce-stubs": "*",
+		"wpsyntex/polylang-stubs": "dev-master"
+	}
+}
