@@ -1,17 +1,27 @@
 <?php
-
 /**
-Plugin Name: WPML to Polylang
-Plugin URI:
-Version: 0.4-dev
-Author: Frédéric Demarle
-Description: imports WPML data into Polylang
-Text Domain: wpml-to-polylang
-Domain Path: /languages
- */
-
-/*
- * Copyright 2013-2019 Frédéric Demarle
+ * WPML to Polylang
+ *
+ * @package              wpml-to-polylang
+ * @author               WP SYNTEX
+ * @license              GPL-3.0-or-later
+ *
+ * @wordpress-plugin
+ * Plugin name:          WPML to Polylang
+ * Plugin URI:           https://polylang.pro
+ * Description:          Import multilingual data from WPML into Polylang
+ * Version:              0.4-dev
+ * Requires at least:    4.9
+ * Requires PHP:         5.6
+ * Author:               WP SYNTEX
+ * Author URI:           https://polylang.pro
+ * Text Domain:          wpml-to-polylang
+ * Domain Path:          /languages
+ * License:              GPL v3 or later
+ * License URI:          https://www.gnu.org/licenses/gpl-3.0.txt
+ *
+ * Copyright 2013-2020 Frédéric Demarle
+ * Copyright 2021 WP SYNTEX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
