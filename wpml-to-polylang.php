@@ -37,14 +37,12 @@ Domain Path: /languages
 class WPML_To_Polylang {
 
 	/**
-	 * Instance of PLL_Model
-	 *
-	 * @var object
+	 * @var PLL_Admin_Model
 	 */
 	protected $model;
 
 	/**
-	 * WPML settings
+	 * WPML settings.
 	 *
 	 * @var array
 	 */
@@ -66,7 +64,7 @@ class WPML_To_Polylang {
 	}
 
 	/**
-	 * Use PLL_Admin_Model to be able to create languages
+	 * Uses PLL_Admin_Model to be able to create languages.
 	 *
 	 * @since 0.2
 	 *
@@ -77,9 +75,11 @@ class WPML_To_Polylang {
 	}
 
 	/**
-	 * Adds the link to the languages panel in the WordPress admin menu
+	 * Adds the link to the languages panel in the WordPress admin menu.
 	 *
 	 * @since 0.1
+	 *
+	 * @return void
 	 */
 	public function add_menus() {
 		load_plugin_textdomain( 'wpml-to-polylang', false, basename( dirname( __FILE__ ) ) . '/languages' ); // Plugin i18n.
@@ -88,10 +88,12 @@ class WPML_To_Polylang {
 	}
 
 	/**
-	 * Displays the import page
-	 * Processes the import action
+	 * Displays the import page.
+	 * Processes the import action.
 	 *
 	 * @since 0.1
+	 *
+	 * @return void
 	 */
 	public function tools_page() {
 		?>
@@ -179,9 +181,11 @@ class WPML_To_Polylang {
 	}
 
 	/**
-	 * Dispatches the different import steps
+	 * Dispatches the different import steps.
 	 *
 	 * @since 0.1
+	 *
+	 * @return void
 	 */
 	public function import() {
 		global $wpdb;
@@ -195,8 +199,8 @@ class WPML_To_Polylang {
 		$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}icl_translations" );
 
 		/*
-		 *  Get the correspondance between term_taxonomy_id and term_id ( duplicates are discarded )
-		 * Needed as WPML stores term_taxonomy_id in icl_translations while Polylang translates term_id
+		 * Get the correspondance between term_taxonomy_id and term_id ( duplicates are discarded ).
+		 * Required as WPML stores term_taxonomy_id in icl_translations while Polylang translates term_id.
 		 * Thanks to Nickness. See http://wordpress.org/support/topic/wpml-languages-import-is-broken-with-last-polylang-update-15-16
 		 */
 		$_taxonomies = array( 'category', 'post_tag', 'nav_menu' );
@@ -242,17 +246,17 @@ class WPML_To_Polylang {
 	}
 
 	/**
-	 * Creates the Polylang languages
+	 * Creates the Polylang languages.
 	 *
 	 * @since 0.1
+	 *
+	 * @return void
 	 */
 	public function add_languages() {
 		global $wpdb;
 
 		// Get Polylang predefined languages list.
-		if ( defined( 'POLYLANG_DIR' ) && file_exists( POLYLANG_DIR . '/settings/languages.php' ) ) {
-			$languages = include POLYLANG_DIR . '/settings/languages.php';
-		}
+		$languages = include POLYLANG_DIR . '/settings/languages.php';
 
 		// Get WPML languages.
 		$wpml_languages = $wpdb->get_results(
@@ -276,21 +280,26 @@ class WPML_To_Polylang {
 			$this->model->add_language( $lang );
 		}
 
-		// Delete the translation group of the default category to avoid a conflict later.
-		foreach ( get_terms( 'term_translations', array( 'hide_empty' => false, 'fields' => 'ids' ) ) as $term_id ) {
-			wp_delete_term( $term_id, 'term_translations' );
+		/** @var int[] */
+		$term_ids = get_terms( 'term_translations', array( 'hide_empty' => false, 'fields' => 'ids' ) );
+		if ( is_array( $term_ids ) ) {
+			// Delete the translation group of the default category to avoid a conflict later.
+			foreach ( $term_ids as $term_id ) {
+				wp_delete_term( $term_id, 'term_translations' );
+			}
 		}
 
 		$this->model->clean_languages_cache(); // Update the languages list.
 	}
 
 	/**
-	 * Assigns languages to posts and terms
+	 * Assigns languages to posts and terms.
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $results  icl_translations table entries.
-	 * @param array $term_ids Correspondances between term_id and term_taxonomy_id.
+	 * @param stdClass[] $results  icl_translations table entries.
+	 * @param stdClass[] $term_ids Correspondances between term_id and term_taxonomy_id.
+	 * @return void
 	 */
 	public function process_post_term_languages( $results, $term_ids ) {
 		global $wpdb;
@@ -336,12 +345,13 @@ class WPML_To_Polylang {
 	}
 
 	/**
-	 * Creates translations groups
+	 * Creates translations groups.
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $results  icl_translations table entries.
-	 * @param array $term_ids Correspondances between term_id and term_taxonomy_id.
+	 * @param stdClass[] $results  icl_translations table entries.
+	 * @param stdClass[] $term_ids Correspondances between term_id and term_taxonomy_id.
+	 * @return void
 	 */
 	public function process_post_term_translations( $results, $term_ids ) {
 		global $wpdb;
@@ -420,11 +430,13 @@ class WPML_To_Polylang {
 			$terms = get_terms( $type . '_translations', array( 'hide_empty' => false ) );
 
 			// Prepare objects relationships.
-			foreach ( $terms as $term ) {
-				$translations = unserialize( $term->description );
-				foreach ( $translations as $object_id ) {
-					if ( ! empty( $object_id ) ) {
-						$trs[] = $wpdb->prepare( '(%d, %d)', $object_id, $term->term_taxonomy_id );
+			if ( is_array( $terms ) ) {
+				foreach ( $terms as $term ) {
+					$translations = unserialize( $term->description );
+					foreach ( $translations as $object_id ) {
+						if ( ! empty( $object_id ) ) {
+							$trs[] = $wpdb->prepare( '(%d, %d)', $object_id, $term->term_taxonomy_id );
+						}
 					}
 				}
 			}
@@ -458,13 +470,19 @@ class WPML_To_Polylang {
 	 * Adds strings translations
 	 *
 	 * @since 0.1
+	 *
+	 * @return void
 	 */
 	public function process_strings_translations() {
 		global $wpdb;
 
 		$string_translations = array();
 
-		// Get WPML string translations.
+		/**
+		 * WPML string translations.
+		 *
+		 * @var stdClass[]
+		 */
 		$results = $wpdb->get_results(
 			"SELECT s.value AS string, st.language, st.value AS translation
 			FROM {$wpdb->prefix}icl_strings AS s
@@ -481,11 +499,14 @@ class WPML_To_Polylang {
 		// Save Polylang string translations.
 		if ( ! empty( $string_translations ) ) {
 			foreach ( $string_translations as $lang => $strings ) {
-				$mo = new PLL_MO();
-				foreach ( $strings as $msg ) {
-					$mo->add_entry( $mo->make_entry( $msg[0], $msg[1] ) );
+				$language = $this->model->get_language( $lang );
+				if ( $language ) {
+					$mo = new PLL_MO();
+					foreach ( $strings as $msg ) {
+						$mo->add_entry( $mo->make_entry( $msg[0], $msg[1] ) );
+					}
+					$mo->export_to_db( $language );
 				}
-				$mo->export_to_db( $this->model->get_language( $lang ) );
 			}
 		}
 	}
@@ -494,6 +515,8 @@ class WPML_To_Polylang {
 	 * Defines Polylang options
 	 *
 	 * @since 0.1
+	 *
+	 * @return void
 	 */
 	public function process_options() {
 		$options = get_option( 'polylang' );
