@@ -2,6 +2,12 @@
 <ruleset name="WPML to Polylang">
 	<description>Coding standards for WPML to Polylang</description>
 
+	<arg name="extensions" value="php,js" />
+	<arg name="colors"/>
+	<arg value="ps"/>
+
+	<file>.</file>
+
 	<rule ref="PHPCompatibilityWP">
 		<config name="testVersion" value="5.6-"/>
 	</rule>
@@ -12,6 +18,7 @@
 	</rule>
 
 	<rule ref="WordPress">
+		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
 		<exclude name="Generic.Formatting.MultipleStatementAlignment.NotSameWarning"/>
 		<exclude name="Squiz.Commenting.FileComment"/>
 		<exclude name="WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound"/>
@@ -31,4 +38,5 @@
 		</properties>
 	</rule>
 
+	<exclude-pattern>vendor/*</exclude-pattern>
 </ruleset>
