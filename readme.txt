@@ -3,7 +3,7 @@ Contributors: Chouby
 Donate link: https://polylang.pro
 Tags: Polylang, WPML, importer, multilingual, bilingual
 Requires at least: 4.9
-Tested up to: 5.6
+Tested up to: 5.8
 Stable tag: 0.4
 License: GPLv3 or later
 
@@ -32,7 +32,7 @@ Although WPML data should not be corrupted, as Polylang data are created without
 * De-activate WPML to Polylang (You can even delete it).
 * Setup a language switcher either as a widget or in nav menus.
 * Check that everything is OK.
-* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in the Plugins table (If you want to delete all data created for Polylang, you need to add `define( 'PLL_REMOVE_ALL_DATA', true );` **before** deleting Polylang) and then re-activate WPML.
+* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in the Plugins table. If you want to delete all data created for Polylang, Please read [how](https://polylang.pro/doc/how-to-uninstall-polylang/) **before** deleting Polylang. Finally you can re-activate WPML.
 
 = Notes =
 
