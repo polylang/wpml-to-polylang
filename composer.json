@@ -15,5 +15,10 @@
 		"szepeviktor/phpstan-wordpress": "*",
 		"php-stubs/woocommerce-stubs": "*",
 		"wpsyntex/polylang-stubs": "dev-master"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
 	}
 }
