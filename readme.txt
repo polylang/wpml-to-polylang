@@ -43,10 +43,12 @@ These are entirely optional and not required but may be necessary depending on t
 | Constants | Default | Description |
 |-----------|---------|-------------|
 | `WPML_TO_POLYLANG_SCRIPT_TIMEOUT_IN_SECONDS` | (int) `1800` | The time allotted for the script to run (`1800` is 30 mins). Never use `0` as this is a bad practice. |
-| `WPML_TO_POLYLANG_QUERY_BATCH_SIZE` | (int) `25000` | The size of the data to send to the database at a time. Increasing this will improve performance but at the risk of needing to increase your `max_packet_size` in MySQL. |
+| `WPML_TO_POLYLANG_QUERY_BATCH_SIZE` | (int) `25000` | The size of the data to send to the database at a time. Increasing this will improve performance but at the risk of needing to increase `max_allowed_packet` in MySQL. |
 | `WPML_TO_POLYLANG_LEGACY_SUBMISSION` | (bool) `false` | Disables AJAX submissions and uses the form submission instead (you will gateway timeout issues if behind a proxy/load balancer if enabled) |
 
-Memory issues are the most common problem you will experience. To solve this, you can set the WordPress constant `WP_MAX_MEMORY_LIMIT` to a higher value. This value depends on the amount of data you are needing to import.
+Memory issues are the most common problem you will experience.
+To solve this, you can set the WordPress constant `WP_MAX_MEMORY_LIMIT` to a higher value.
+This value depends on the amount of data you are needing to import.
 
 = Notes =
 
