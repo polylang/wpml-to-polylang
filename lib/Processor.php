@@ -230,7 +230,10 @@ class Processor {
                 $wpdb->query( "INSERT INTO {$wpdb->term_relationships} (object_id, term_taxonomy_id) VALUES " . implode( ',', $chunk ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             }
         }
-        $post_languages = NULL; unset($post_languages); time_nanosleep(0, 10000000); // Free memory
+        // Free memory
+        $post_languages = NULL; unset($post_languages);
+        $chunk = NULL; unset($chunk);
+        time_nanosleep(0, 10000000);
 
         if ( ! empty( $term_languages ) ) {
             $term_languages = array_chunk($term_languages, WPML_TO_POLYLANG_QUERY_BATCH_SIZE);
@@ -238,7 +241,11 @@ class Processor {
                 $wpdb->query("INSERT INTO {$wpdb->term_relationships} (object_id, term_taxonomy_id) VALUES " . implode(',', $chunk)); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             }
         }
-        $term_languages = NULL; unset($term_languages); time_nanosleep(0, 10000000); // Free memory
+        // Free memory
+        $term_languages = NULL; unset($term_languages);
+        $chunk = NULL; unset($chunk);
+        time_nanosleep(0, 10000000);
+        // Free memory
 
         // Update language counts
         foreach ( $languages as $lang ) {
@@ -366,9 +373,12 @@ class Processor {
                     $wpdb->query("INSERT INTO {$wpdb->term_taxonomy} (term_id, taxonomy, description, count) VALUES " . implode(',', $chunk)); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                 }
             }
-            $tts = NULL; unset($tts); time_nanosleep(0, 10000000); // Free memory
+            // Free memory
+            $tts = NULL; unset($tts);
+            $chunk = NULL; unset($chunk);
+            time_nanosleep(0, 10000000);
 
-
+            
             // Get all terms with term_taxonomy_id.
             $terms = get_terms( $type . '_translations', array( 'hide_empty' => false ) );
 
@@ -393,7 +403,10 @@ class Processor {
                     $wpdb->query("INSERT INTO {$wpdb->term_relationships} (object_id, term_taxonomy_id) VALUES " . implode(',', $chunk)); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
                 }
             }
-            $trs = NULL; unset($trs); time_nanosleep(0, 10000000); // Free memory
+            // Free memory
+            $trs = NULL; unset($trs);
+            $chunk = NULL; unset($chunk);
+            time_nanosleep(0, 10000000);
         }
     }
 
