@@ -66,9 +66,10 @@ class Plugin {
      */
     public function __construct() {
         // Register plugin autoloader
-        spl_autoload_register(__NAMESPACE__ . '\\Plugin::autoload');
+        spl_autoload_register(__CLASS__ . '::autoload');
         // Set deactivation hook
-        register_deactivation_hook(PLUGIN_FILE, array(__NAMESPACE__ . '\\Plugin', 'deactivation'));
+        register_deactivation_hook(PLUGIN_FILE, __CLASS__ . '::deactivation');
+        // Initialize tools page
         new Tools_Page();
     }
 
@@ -98,6 +99,7 @@ class Plugin {
      */
     public static function deactivation() {
         Status::remove_from_db();
+        Cron::clear_schedule_event();
     }
 
 }

@@ -13,18 +13,24 @@ if (!defined('ABSPATH')) {
  */
 class Cron {
 
+    const HOOK_NAME = 'wpml_to_polylang_import';
+
     public static function add_cron_hook() {
         // Cron needs to be outside the is_admin check
-        add_action('wpml_to_polylang_import', __CLASS__.'::triggerProcessor');
+        add_action(self::HOOK_NAME, __CLASS__.'::trigger_processor');
     }
 
     public static function schedule_event() {
-        if ( false === \wp_next_scheduled( 'wpml_to_polylang_import' ) ) {
-            \wp_schedule_single_event(time(), 'wpml_to_polylang_import');
+        if ( false === \wp_next_scheduled( self::HOOK_NAME) ) {
+            \wp_schedule_single_event(time(), self::HOOK_NAME);
         }
     }
 
-    public static function triggerProcessor() {
+    public static function clear_schedule_event() {
+        \wp_clear_scheduled_hook(self::HOOK_NAME);
+    }
+
+    public static function trigger_processor() {
         new Processor();
     }
 
