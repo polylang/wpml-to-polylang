@@ -46,8 +46,9 @@ if (!defined('ABSPATH')) {
 }
 
 // Define namespaced constants
-define(__NAMESPACE__ . '\PLUGIN_DIRECTORY', plugin_dir_path(__FILE__));
-define(__NAMESPACE__ . '\LIBRARY_DIRECTORY', PLUGIN_DIRECTORY . 'lib');
+define(__NAMESPACE__ . '\\PLUGIN_FILE', __FILE__);
+define(__NAMESPACE__ . '\\PLUGIN_DIRECTORY', plugin_dir_path(PLUGIN_FILE));
+define(__NAMESPACE__ . '\\LIBRARY_DIRECTORY', PLUGIN_DIRECTORY . 'lib');
 
 /**
  * A class to manage migration from WPML to Polylang.
@@ -66,6 +67,8 @@ class Plugin {
     public function __construct() {
         // Register plugin autoloader
         spl_autoload_register(__NAMESPACE__ . '\\Plugin::autoload');
+        // Set deactivation hook
+        register_deactivation_hook(PLUGIN_FILE, array(__NAMESPACE__ . '\\Plugin', 'deactivation'));
         new Tools_Page();
     }
 
@@ -87,6 +90,14 @@ class Plugin {
         if (file_exists($path)) {
             require_once($path);
         }
+    }
+
+    /**
+     * Handles cleanup of deactivation
+     * @return void
+     */
+    public static function deactivation() {
+        Status::remove_from_db();
     }
 
 }
