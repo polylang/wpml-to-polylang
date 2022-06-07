@@ -253,6 +253,16 @@ class Tools_Page {
                                     if (json.status == <?php echo Status::STATUS_COMPLETED; ?>) {
                                         status_cage.empty();
                                         button_submit.prop('disabled', false);
+
+                                        let complete_message =  jQuery('<h3>', {
+                                            id: 'wpml-importer-spinner-status',
+                                            text: "<?php echo esc_attr(Status::get_as_text(Status::STATUS_WAITING_ON_CRON)); ?>"
+                                        });
+                                        complete_message
+                                            .css('display', 'inline-block')
+                                            .css('color', 'green')
+                                        ;
+                                        status_cage.append(complete_message);
                                     } else {
                                         _trigger_check_interval();
                                     }
