@@ -256,7 +256,7 @@ class Tools_Page {
 
                                         let complete_message =  jQuery('<h3>', {
                                             id: 'wpml-importer-spinner-status',
-                                            text: "<?php echo esc_attr(Status::get_as_text(Status::STATUS_WAITING_ON_CRON)); ?>"
+                                            text: "<?php echo esc_attr(Status::get_as_text(Status::STATUS_COMPLETED)); ?>"
                                         });
                                         complete_message
                                             .css('display', 'inline-block')
