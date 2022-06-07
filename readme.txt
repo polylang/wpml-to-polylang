@@ -56,6 +56,9 @@ This plugin does not include error management. It has however been tested succes
 As everything is processed in one unique step, big sites may require to tweak the PHP memory limit and MySQL buffer size.
 It has been tested with WPML 4.4.8. It has also tested on multisite.
 
+The import process is handed to the WordPress cron system. If you do not have this setup as a proper cron and are using the default WordPress cron setup, you can invoke the cron manually by going to `wp-cron.php?doing_wp_cron`.
+Or you can define `WPML_TO_POLYLANG_LEGACY_SUBMISSION` to use the legacy POST method which runs when you submit the form.
+
 = Credits =
 
 The banner and icon were designed by [Alex Lopez](http://www.alexlopez.rocks/)
