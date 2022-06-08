@@ -285,8 +285,6 @@ class Tools_Page {
 									// Return to normal when complete.
 									if (json.status == <?php echo esc_attr( Status::STATUS_COMPLETED ); ?>) {
 										status_cage.empty();
-										button_submit.prop('disabled', false);
-
 										let complete_message = jQuery('<h3>', {
 											id: 'wpml-importer-spinner-status',
 											text: "<?php echo esc_attr( Status::get_as_text( Status::STATUS_COMPLETED ) ); ?>"
