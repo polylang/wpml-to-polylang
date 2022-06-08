@@ -45,10 +45,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
-// Define namespaced constants.
-define( __NAMESPACE__ . '\\PLUGIN_FILE', __FILE__ );
-define( __NAMESPACE__ . '\\PLUGIN_DIRECTORY', plugin_dir_path( PLUGIN_FILE ) );
-define( __NAMESPACE__ . '\\LIBRARY_DIRECTORY', PLUGIN_DIRECTORY . 'lib' );
+// Composer autoloader
+require __DIR__ . '/vendor/autoload.php';
 
 /**
  * A class to manage migration from WPML to Polylang.
@@ -65,27 +63,8 @@ class Plugin {
 	 * @since 0.1
 	 */
 	public function __construct() {
-		spl_autoload_register( __CLASS__ . '::autoload' );
-		register_deactivation_hook( PLUGIN_FILE, __CLASS__ . '::deactivation' );
+		register_deactivation_hook( plugin_basename( __FILE__ ), __CLASS__ . '::deactivation' );
 		new Tools_Page();
-	}
-
-	/**
-	 * Autoloads the plugin resources.
-	 *
-	 * @param string $class class.
-	 */
-	public static function autoload( $class ) {
-		$class = ltrim( $class, '\\' );
-		if ( strpos( $class, __NAMESPACE__ ) !== 0 ) {
-			return;
-		}
-		$class = str_replace( __NAMESPACE__, '', $class );
-		$class = str_replace( '\\', DIRECTORY_SEPARATOR, $class );
-		$path = LIBRARY_DIRECTORY . $class . '.php';
-		if ( file_exists( $path ) ) {
-			require_once $path;
-		}
 	}
 
 	/**

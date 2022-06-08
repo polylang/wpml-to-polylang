@@ -16,6 +16,11 @@
 		"php-stubs/woocommerce-stubs": "*",
 		"wpsyntex/polylang-stubs": "dev-master"
 	},
+	"autoload": {
+		"classmap": [
+			"lib/"
+		]
+	},
 	"config": {
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true
