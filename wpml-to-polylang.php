@@ -45,7 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
-// Composer autoloader
+// Composer autoloader.
 require __DIR__ . '/vendor/autoload.php';
 
 /**
