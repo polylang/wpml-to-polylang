@@ -39,13 +39,13 @@
 
 namespace WPML_To_Polylang;
 
-// Deny direct access
+// Deny direct access.
 if ( ! defined( 'ABSPATH' ) ) {
-	header( "HTTP/1.0 404 Not Found" );
+	header( 'HTTP/1.0 404 Not Found' );
 	exit();
 }
 
-// Define namespaced constants
+// Define namespaced constants.
 define( __NAMESPACE__ . '\\PLUGIN_FILE', __FILE__ );
 define( __NAMESPACE__ . '\\PLUGIN_DIRECTORY', plugin_dir_path( PLUGIN_FILE ) );
 define( __NAMESPACE__ . '\\LIBRARY_DIRECTORY', PLUGIN_DIRECTORY . 'lib' );
@@ -65,37 +65,32 @@ class Plugin {
 	 * @since 0.1
 	 */
 	public function __construct() {
-		// Register plugin autoloader
 		spl_autoload_register( __CLASS__ . '::autoload' );
-		// Set deactivation hook
 		register_deactivation_hook( PLUGIN_FILE, __CLASS__ . '::deactivation' );
-		// Initialize tools page
 		new Tools_Page();
 	}
 
 	/**
-	 * Autoloads the plugin resources
+	 * Autoloads the plugin resources.
 	 *
-	 * @param string $class
+	 * @param string $class class.
 	 */
 	public static function autoload( $class ) {
 		$class = ltrim( $class, '\\' );
-		// Make sure we are in the current namespace
 		if ( strpos( $class, __NAMESPACE__ ) !== 0 ) {
 			return;
 		}
-		// Fix class
 		$class = str_replace( __NAMESPACE__, '', $class );
 		$class = str_replace( '\\', DIRECTORY_SEPARATOR, $class );
-		// Namespaced files are located in the lib directory
 		$path = LIBRARY_DIRECTORY . $class . '.php';
 		if ( file_exists( $path ) ) {
-			require_once( $path );
+			require_once $path;
 		}
 	}
 
 	/**
-	 * Handles cleanup of deactivation
+	 * Handles cleanup of deactivation.
+	 *
 	 * @return void
 	 */
 	public static function deactivation() {
@@ -105,5 +100,4 @@ class Plugin {
 
 }
 
-// Init the plugin
 new Plugin();

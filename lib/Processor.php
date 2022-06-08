@@ -1,20 +1,22 @@
 <?php
+/**
+ * Processor
+ *
+ * @package wpml-to-polylang
+ */
 
 namespace WPML_To_Polylang;
 
-// Deny direct access
 if ( ! defined( 'ABSPATH' ) ) {
-	header( "HTTP/1.0 404 Not Found" );
+	header( 'HTTP/1.0 404 Not Found' );
 	exit();
 }
 
-// Allow overrides
 if ( false === defined( 'WPML_TO_POLYLANG_SCRIPT_TIMEOUT_IN_SECONDS' ) ) {
-	define( 'WPML_TO_POLYLANG_SCRIPT_TIMEOUT_IN_SECONDS', 1800 ); // never use 0
+	define( 'WPML_TO_POLYLANG_SCRIPT_TIMEOUT_IN_SECONDS', 1800 ); // never use 0.
 }
 if ( false === defined( 'WPML_TO_POLYLANG_QUERY_BATCH_SIZE' ) ) {
-	define( 'WPML_TO_POLYLANG_QUERY_BATCH_SIZE', 25000 ); //
-}
+	define( 'WPML_TO_POLYLANG_QUERY_BATCH_SIZE', 25000 ); }
 
 /**
  * Responsible for processing the actual import process from WPML to PolyLang
@@ -33,6 +35,9 @@ class Processor {
 	 */
 	protected $icl_settings;
 
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 		$this->icl_settings = \get_option( 'icl_sitepress_settings' );
 		$this->model        = $GLOBALS['polylang']->model;
@@ -44,36 +49,35 @@ class Processor {
 	 *
 	 * @return void
 	 * @since 0.1
-	 *
 	 */
 	protected function import() {
-		set_time_limit( WPML_TO_POLYLANG_SCRIPT_TIMEOUT_IN_SECONDS ); // never use 0
+		set_time_limit( WPML_TO_POLYLANG_SCRIPT_TIMEOUT_IN_SECONDS ); // never use 0.
 
 		Status::update( Status::STATUS_PREPARING_DATA );
 
-		// Order of operations
-		$this->_create_polylang_languages();
+		// Order of operations.
+		$this->create_polylang_languages();
 		$this->prepare_for_import();
 
-		// Migrate Post Type and Taxonomies translations
-		$this->_import_wpml_translations();
-		$this->_import_objects_with_no_lang();
+		// Migrate Post Type and Taxonomies translations.
+		$this->import_wpml_translations();
+		$this->import_objects_with_no_lang();
 
 		// Migrate strings translations and options.
-		$this->_process_strings_translations();
-		$this->_process_options();
+		$this->process_strings_translations();
+		$this->process_options();
 
 		$this->cleanup();
 		$this->complete();
 	}
 
 	/**
-	 * Actions to perform to prepare for import
+	 * Actions to perform to prepare for import.
 	 *
 	 * @return void
 	 */
 	protected function prepare_for_import() {
-		// Purge term_translations to prevent issues
+		// Purge term_translations to prevent issues.
 		/** @var int[] */
 		$term_ids = \get_terms( 'term_translations', array( 'hide_empty' => false, 'fields' => 'ids' ) );
 		if ( is_array( $term_ids ) ) {
@@ -82,16 +86,17 @@ class Processor {
 				\wp_delete_term( $term_id, 'term_translations' );
 			}
 		}
+		// Free memory.
 		$term_ids = null;
 		unset( $term_ids );
-		time_nanosleep( 0, 10000000 ); // Free memory
+		time_nanosleep( 0, 10000000 );
 
 		// Update the languages list.
 		$this->model->clean_languages_cache();
 	}
 
 	/**
-	 * Handles any cleanup operations
+	 * Handles any cleanup operations.
 	 *
 	 * @return void
 	 */
@@ -107,7 +112,8 @@ class Processor {
 	}
 
 	/**
-	 * Completes the import process
+	 * Completes the import process.
+	 *
 	 * @return void
 	 */
 	protected function complete() {
@@ -120,9 +126,8 @@ class Processor {
 	 *
 	 * @return void
 	 * @since 0.1
-	 *
 	 */
-	private function _create_polylang_languages() {
+	private function create_polylang_languages() {
 		global $wpdb;
 
 		// Get Polylang predefined languages list.
@@ -137,12 +142,12 @@ class Processor {
 			ARRAY_A
 		);
 
-		// Process language order from WPML
+		// Process language order from WPML.
 		foreach ( $this->icl_settings['languages_order'] as $ordered_lang_slug ) {
-			// Loop over WPML languages and add to PolyLang in the same order
-			// NOTE: assumption that languages_order has all languages (tests show this is always true)
+			// Loop over WPML languages and add to PolyLang in the same order.
+			// NOTE: assumption that languages_order has all languages (tests show this is always true).
 			foreach ( $wpml_languages as $index => $lang ) {
-				if ( $lang['slug'] != $ordered_lang_slug ) {
+				if ( $lang['slug'] !== $ordered_lang_slug ) {
 					continue;
 				}
 
@@ -155,29 +160,32 @@ class Processor {
 
 				$this->model->add_language( $lang );
 
-				// Remove since we already processed it (no need to use this one again)
+				// Remove since we already processed it (no need to use this one again).
 				unset( $wpml_languages[ $index ] );
 			}
 		}
 	}
 
 	/**
-	 * Imports WPML translations into PolyLang
+	 * Imports WPML translations into PolyLang.
 	 *
 	 * @return void
 	 */
-	private function _import_wpml_translations() {
+	private function import_wpml_translations() {
 		global $wpdb;
 
 		Status::update( Status::STATUS_PROCESSING_POST_AND_TAX_TRANSLATIONS );
 
-		// Collect necessary data for processing translations
-		/* @var \PLL_Language[] */
+		/**
+		 * Collect necessary data for processing translations.
+		 *
+		 * @var \PLL_Language[]
+		 */
 		$languages = array();
 		foreach ( $this->model->get_languages_list() as $lang ) {
 			$languages[ $lang->slug ] = $lang;
 		}
-		$term_ids = $this->_get_term_ids_with_correspondence();
+		$term_ids = $this->get_term_ids_with_correspondence();
 
 		$default_cat = (int) \get_option( 'default_category' );
 
@@ -185,10 +193,10 @@ class Processor {
 		$post_languages   = array();
 		$term_languages   = array();
 
-		// Paginate the translations
-		$totalRecords = (int) $wpdb->get_var( "SELECT COUNT(1) as total FROM {$wpdb->prefix}icl_translations" );
-		$totalPages   = (int) ceil( $totalRecords / WPML_TO_POLYLANG_QUERY_BATCH_SIZE );
-		for ( $page = 1; $page <= $totalPages; $page ++ ) {
+		// Paginate the translations.
+		$total_records = (int) $wpdb->get_var( "SELECT COUNT(1) as total FROM {$wpdb->prefix}icl_translations" );
+		$total_pages   = (int) ceil( $total_records / WPML_TO_POLYLANG_QUERY_BATCH_SIZE );
+		for ( $page = 1; $page <= $total_pages; $page ++ ) {
 			$offset  = ( $page * WPML_TO_POLYLANG_QUERY_BATCH_SIZE ) - WPML_TO_POLYLANG_QUERY_BATCH_SIZE;
 			$results = $wpdb->get_results(
 				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}icl_translations LIMIT %d, %d", $offset, WPML_TO_POLYLANG_QUERY_BATCH_SIZE )
@@ -196,13 +204,13 @@ class Processor {
 
 			foreach ( $results as $r ) {
 				if ( ! empty( $r->language_code ) && ! empty( $languages[ $r->language_code ] ) ) {
-					// TODO Optimize this
+					// TODO Optimize this.
 
 					// Posts and terms languages.
 					if ( 0 === strpos( $r->element_type, 'post_' ) && $this->_is_translated_post_type( substr( $r->element_type, 5 ) ) ) {
 						// $wpdb->prepare is overkill and unnecessary here (dealing with integers)
 						$post_languages[] = '(' . (int) $r->element_id . ', ' . (int) $languages[ $r->language_code ]->term_taxonomy_id . ')';
-					} else if ( 0 === strpos( $r->element_type, 'tax_' ) && $this->_is_translated_taxonomy( substr( $r->element_type, 4 ) ) && ! empty( $term_ids[ $r->element_id ] ) && (int) $term_ids[ $r->element_id ]->term_id !== $default_cat ) {
+					} elseif ( 0 === strpos( $r->element_type, 'tax_' ) && $this->_is_translated_taxonomy( substr( $r->element_type, 4 ) ) && ! empty( $term_ids[ $r->element_id ] ) && (int) $term_ids[ $r->element_id ]->term_id !== $default_cat ) {
 						// $wpdb->prepare is overkill and unnecessary here (dealing with integers)
 						$term_languages[] = '(' . (int) $term_ids[ $r->element_id ]->term_id . ', ' . (int) $languages[ $r->language_code ]->tl_term_taxonomy_id . ')';
 					}
@@ -210,9 +218,9 @@ class Processor {
 					// Arrange translations in a convenient way.
 					if ( 'tax_nav_menu' === $r->element_type && ! empty( $term_ids[ $r->element_id ] ) ) {
 						$icl_translations['nav_menu'][ $r->trid ][ $r->language_code ] = (int) $term_ids[ $r->element_id ]->term_id;
-					} else if ( 0 === strpos( $r->element_type, 'post_' ) && $this->_is_translated_post_type( substr( $r->element_type, 5 ) ) ) {
+					} elseif ( 0 === strpos( $r->element_type, 'post_' ) && $this->_is_translated_post_type( substr( $r->element_type, 5 ) ) ) {
 						$icl_translations['post'][ $r->trid ][ $r->language_code ] = (int) $r->element_id;
-					} else if ( 0 === strpos( $r->element_type, 'tax_' ) && $this->_is_translated_taxonomy( substr( $r->element_type, 4 ) ) && ! empty( $term_ids[ $r->element_id ] ) ) {
+					} elseif ( 0 === strpos( $r->element_type, 'tax_' ) && $this->_is_translated_taxonomy( substr( $r->element_type, 4 ) ) && ! empty( $term_ids[ $r->element_id ] ) ) {
 						$icl_translations['term'][ $r->trid ][ $r->language_code ] = (int) $term_ids[ $r->element_id ]->term_id;
 					}
 				}
@@ -222,7 +230,7 @@ class Processor {
 		unset( $term_ids );
 		$results = null;
 		unset( $results );
-		time_nanosleep( 0, 10000000 ); // Free memory
+		time_nanosleep( 0, 10000000 ); // Free memory.
 
 		$post_languages = array_unique( $post_languages );
 		$term_languages = array_unique( $term_languages );
@@ -234,7 +242,7 @@ class Processor {
 				$wpdb->query( "INSERT INTO {$wpdb->term_relationships} (object_id, term_taxonomy_id) VALUES " . implode( ',', $chunk ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			}
 		}
-		// Free memory
+		// Free memory.
 		$post_languages = null;
 		unset( $post_languages );
 		$chunk = null;
@@ -247,33 +255,33 @@ class Processor {
 				$wpdb->query( "INSERT INTO {$wpdb->term_relationships} (object_id, term_taxonomy_id) VALUES " . implode( ',', $chunk ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			}
 		}
-		// Free memory
+		// Free memory.
 		$term_languages = null;
 		unset( $term_languages );
 		$chunk = null;
 		unset( $chunk );
 		time_nanosleep( 0, 10000000 );
-		// Free memory
 
-		// Update language counts
+		// Update language counts.
 		foreach ( $languages as $lang ) {
 			$lang->update_count();
 		}
 
-		$this->_process_post_term_translations( $icl_translations );
-		$this->_process_nav_menu_translations( $icl_translations );
+		$this->process_post_term_translations( $icl_translations );
+		$this->process_nav_menu_translations( $icl_translations );
 
-		// Cleanup
+		// Free memory.
 		$icl_translations = null;
 		unset( $icl_translations );
-		time_nanosleep( 0, 10000000 ); // Free memory
+		time_nanosleep( 0, 10000000 );
 	}
 
 	/**
-	 * Returns term ids with correspondence between term_taxonomy_id and term_id
+	 * Returns term ids with correspondence between term_taxonomy_id and term_id.
+	 *
 	 * @return \stdClass[]
 	 */
-	private function _get_term_ids_with_correspondence() {
+	private function get_term_ids_with_correspondence() {
 		global $wpdb;
 
 		/*
@@ -288,12 +296,13 @@ class Processor {
 
 		$taxonomies = array();
 		foreach ( $_taxonomies as $tax ) {
-			// $wpdb->prepare is not needed here, this is fresh from the DB (if this is corrupt, they have bigger issues)
+			// $wpdb->prepare is not needed here, this is fresh from the DB (if this is corrupt, they have bigger issues).
 			$taxonomies[] = $tax;
 		}
+		// Free memory.
 		$_taxonomies = null;
 		unset( $_taxonomies );
-		time_nanosleep( 0, 10000000 ); // Free memory
+		time_nanosleep( 0, 10000000 );
 
 		$term_ids   = array();
 		$taxonomies = array_chunk( $taxonomies, WPML_TO_POLYLANG_QUERY_BATCH_SIZE );
@@ -302,12 +311,12 @@ class Processor {
 			$term_ids      = array_merge( $term_ids, $_tmp_term_ids );
 		}
 
-		// Cleanup
+		// Free memory.
 		$taxonomies = null;
 		unset( $taxonomies );
 		$_tmp_term_ids = null;
 		unset( $_tmp_term_ids );
-		time_nanosleep( 0, 10000000 ); // Free memory
+		time_nanosleep( 0, 10000000 );
 
 		return $term_ids;
 	}
@@ -315,13 +324,11 @@ class Processor {
 	/**
 	 * Creates translations groups.
 	 *
-	 * @param array $icl_translations
-	 *
+	 * @param array $icl_translations array of icl translations.
 	 * @return void
 	 * @since 0.1
-	 *
 	 */
-	private function _process_post_term_translations( $icl_translations ) {
+	private function process_post_term_translations( $icl_translations ) {
 		global $wpdb;
 
 		Status::update( Status::STATUS_PROCESSING_POST_TERM_TRANSLATIONS );
@@ -345,9 +352,9 @@ class Processor {
 				}
 
 				$term = uniqid( 'pll_' ); // The term name.
-				$term = esc_sql( $term ); // not really needed but best to be safe (due to _)
+				$term = esc_sql( $term ); // not really needed but best to be safe (due to _).
 
-				// $wpdb->prepare is overkill for this (we are generating this and can trust the $term)
+				// $wpdb->prepare is overkill for this (we are generating this and can trust the $term).
 				$terms[] = "('{$term}', '{$term}')";
 				$slugs[] = $term;
 
@@ -363,12 +370,13 @@ class Processor {
 					$wpdb->query( "INSERT INTO {$wpdb->terms} (slug, name) VALUES " . implode( ',', $chunk ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				}
 			}
+			// Free memory.
 			$terms = null;
 			unset( $terms );
-			time_nanosleep( 0, 10000000 ); // Free memory
+			time_nanosleep( 0, 10000000 );
 
 			// Get all terms with their term_id.
-			$terms = array(); // Free memory before reassign as this actually adds to the current memory for it (especially for php5)
+			$terms = array(); // Free memory before reassign as this actually adds to the current memory for it (especially for php5).
 			$slugs = array_chunk( $slugs, WPML_TO_POLYLANG_QUERY_BATCH_SIZE );
 			foreach ( $slugs as $chunk ) {
 				$_tmp_terms = $wpdb->get_results( "SELECT term_id, slug FROM {$wpdb->terms} WHERE slug IN ('" . implode( "','", $chunk ) . "')" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
@@ -389,7 +397,7 @@ class Processor {
 					$wpdb->query( "INSERT INTO {$wpdb->term_taxonomy} (term_id, taxonomy, description, count) VALUES " . implode( ',', $chunk ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				}
 			}
-			// Free memory
+			// Free memory.
 			$tts = null;
 			unset( $tts );
 			$chunk = null;
@@ -406,7 +414,7 @@ class Processor {
 					$translations = unserialize( $term->description );
 					foreach ( $translations as $object_id ) {
 						if ( ! empty( $object_id ) ) {
-							// $wpdb->prepare is overkill and unnecessary here
+							// $wpdb->prepare is overkill and unnecessary here.
 							$trs[] = '(' . (int) $object_id . ', ' . $term->term_taxonomy_id . ')';
 						}
 					}
@@ -421,7 +429,7 @@ class Processor {
 					$wpdb->query( "INSERT INTO {$wpdb->term_relationships} (object_id, term_taxonomy_id) VALUES " . implode( ',', $chunk ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				}
 			}
-			// Free memory
+			// Free memory.
 			$trs = null;
 			unset( $trs );
 			$chunk = null;
@@ -431,19 +439,18 @@ class Processor {
 	}
 
 	/**
-	 * Process Nav Menu translations
+	 * Process Nav Menu translations.
 	 *
-	 * @param $icl_translations
-	 *
+	 * @param array $icl_translations array of icl translations.
 	 * @return void
 	 */
-	private function _process_nav_menu_translations( $icl_translations ) {
+	private function process_nav_menu_translations( $icl_translations ) {
 		Status::update( Status::STATUS_PROCESSING_NAV_MENU_TRANSLATIONS );
 
 		// Nav menus.
 		$options   = \get_option( 'polylang' );
 		$theme     = \get_option( 'stylesheet' );
-		$locations = \get_nav_menu_locations(); // FIXME does not work
+		$locations = \get_nav_menu_locations(); // FIXME does not work (looks good to me, not sure why this is here).
 
 		if ( ! empty( $locations ) && ! empty( $icl_translations['nav_menu'] ) ) {
 			foreach ( $locations as $loc => $menu ) {
@@ -459,12 +466,12 @@ class Processor {
 	}
 
 	/**
-	 * Import objects with no lang
+	 * Import objects with no lang.
 	 * Note: In some cases, there is no language assigned in icl_translations table, but WPML displays the default language anyway.
 	 *
 	 * @return void
 	 */
-	private function _import_objects_with_no_lang() {
+	private function import_objects_with_no_lang() {
 		Status::update( Status::STATUS_PROCESSING_OBJECT_WITH_NO_LANGUAGE );
 
 		$nolang = $this->model->get_objects_with_no_lang();
@@ -479,13 +486,12 @@ class Processor {
 	}
 
 	/**
-	 * Adds strings translations
+	 * Adds strings translations.
 	 *
 	 * @return void
 	 * @since 0.1
-	 *
 	 */
-	private function _process_strings_translations() {
+	private function process_strings_translations() {
 		global $wpdb;
 
 		Status::update( Status::STATUS_PROCESSING_STRING_TRANSLATIONS );
@@ -530,9 +536,8 @@ class Processor {
 	 *
 	 * @return void
 	 * @since 0.1
-	 *
 	 */
-	private function _process_options() {
+	private function process_options() {
 		Status::update( Status::STATUS_PROCESSING_OPTIONS );
 
 		$options = \get_option( 'polylang' );
@@ -601,31 +606,33 @@ class Processor {
 	 * Returns true if WPML manages post type language and translation
 	 *
 	 * @param string $type Post type name.
-	 *
 	 * @return bool
 	 * @since 0.1
-	 *
 	 */
-	private function _is_translated_post_type( $type ) {
-		return in_array( $type, array(
+	private function is_translated_post_type( $type ) {
+		return in_array(
+			$type,
+			array(
 				'post',
-				'page'
-			) ) || ! empty( $this->icl_settings['custom_posts_sync_option'][ $type ] );
+				'page',
+			) 
+		) || ! empty( $this->icl_settings['custom_posts_sync_option'][ $type ] );
 	}
 
 	/**
 	 * Returns true if WPML manages taxonomy language and translation
 	 *
 	 * @param string $tax Taxonomy name.
-	 *
 	 * @return bool
 	 * @since 0.1
-	 *
 	 */
-	private function _is_translated_taxonomy( $tax ) {
-		return in_array( $tax, array(
+	private function is_translated_taxonomy( $tax ) {
+		return in_array(
+			$tax,
+			array(
 				'category',
-				'post_tag'
-			) ) || ! empty( $this->icl_settings['taxonomies_sync_option'][ $tax ] );
+				'post_tag',
+			) 
+		) || ! empty( $this->icl_settings['taxonomies_sync_option'][ $tax ] );
 	}
 }

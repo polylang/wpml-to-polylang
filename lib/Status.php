@@ -1,10 +1,14 @@
 <?php
+/**
+ * Status
+ *
+ * @package wpml-to-polylang
+ */
 
 namespace WPML_To_Polylang;
 
-// Deny direct access
 if ( ! defined( 'ABSPATH' ) ) {
-	header( "HTTP/1.0 404 Not Found" );
+	header( 'HTTP/1.0 404 Not Found' );
 	exit();
 }
 
@@ -15,7 +19,7 @@ class Status {
 
 	const IMPORT_STATUS_FLAG = 'wpml-importer-status';
 
-	// Import statuses (value is irrelevant, just needs to be unique)
+	// Import statuses (value is irrelevant, just needs to be unique).
 	const STATUS_WAITING_ON_CRON = 0;
 	const STATUS_COMPLETED = 1;
 	const STATUS_ERRORED = 2;
@@ -31,11 +35,10 @@ class Status {
 	/**
 	 * Update the import status flag
 	 *
-	 * @param int $status
-	 *
+	 * @param int $status The status to update to.
 	 * @return void
 	 */
-	public static function update( int $status ) {
+	public static function update( $status ) {
 		\update_option( self::IMPORT_STATUS_FLAG, $status, false );
 	}
 
@@ -47,7 +50,7 @@ class Status {
 	public static function get() {
 		$_tmp = \get_option( self::IMPORT_STATUS_FLAG );
 
-		return $_tmp !== false ? (int) $_tmp : false;
+		return false !== $_tmp ? (int) $_tmp : false;
 	}
 
 	/**
@@ -62,11 +65,10 @@ class Status {
 	/**
 	 * Returns the string for the text to show the user for a status
 	 *
-	 * @param int $status
-	 *
+	 * @param int $status The status to get a string representation for.
 	 * @return string
 	 */
-	public static function get_as_text( int $status ) {
+	public static function get_as_text( $status ) {
 		switch ( $status ) {
 			case self::STATUS_COMPLETED:
 				$string = \__( 'Import from WPML to Polylang should have been successful!', 'wpml-to-polylang' );
