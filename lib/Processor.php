@@ -474,8 +474,7 @@ class Processor {
 	private function import_objects_with_no_lang() {
 		Status::update( Status::STATUS_PROCESSING_OBJECT_WITH_NO_LANGUAGE );
 
-		$nolang = $this->model->get_objects_with_no_lang();
-		if ( $nolang ) {
+		while ( $nolang = $this->model->get_objects_with_no_lang( WPML_TO_POLYLANG_QUERY_BATCH_SIZE ) ) {
 			if ( ! empty( $nolang['posts'] ) ) {
 				$this->model->set_language_in_mass( 'post', $nolang['posts'], $this->icl_settings['default_language'] );
 			}
