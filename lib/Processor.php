@@ -119,6 +119,10 @@ class Processor {
 	protected function complete() {
 		\flush_rewrite_rules();
 		Status::update( Status::STATUS_COMPLETED );
+		// Remove the wizard notice as it isn't needed or expected after import is complete.
+		if ( class_exists( 'PLL_Admin_Notices' ) ) {
+			\PLL_Admin_Notices::dismiss( 'wizard' );
+		}
 	}
 
 	/**
@@ -473,8 +477,8 @@ class Processor {
 	 */
 	private function import_objects_with_no_lang() {
 		Status::update( Status::STATUS_PROCESSING_OBJECT_WITH_NO_LANGUAGE );
-
-		while ( $nolang = $this->model->get_objects_with_no_lang( WPML_TO_POLYLANG_QUERY_BATCH_SIZE ) ) {
+		// Exact same logic as from PLL_Wizard->save_step_untranslated_contents.
+		while ( $nolang = $this->model->get_objects_with_no_lang( WPML_TO_POLYLANG_QUERY_BATCH_SIZE ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
 			if ( ! empty( $nolang['posts'] ) ) {
 				$this->model->set_language_in_mass( 'post', $nolang['posts'], $this->icl_settings['default_language'] );
 			}
