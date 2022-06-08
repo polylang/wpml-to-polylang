@@ -207,10 +207,10 @@ class Processor {
 					// TODO Optimize this.
 
 					// Posts and terms languages.
-					if ( 0 === strpos( $r->element_type, 'post_' ) && $this->_is_translated_post_type( substr( $r->element_type, 5 ) ) ) {
+					if ( 0 === strpos( $r->element_type, 'post_' ) && $this->is_translated_post_type( substr( $r->element_type, 5 ) ) ) {
 						// $wpdb->prepare is overkill and unnecessary here (dealing with integers)
 						$post_languages[] = '(' . (int) $r->element_id . ', ' . (int) $languages[ $r->language_code ]->term_taxonomy_id . ')';
-					} elseif ( 0 === strpos( $r->element_type, 'tax_' ) && $this->_is_translated_taxonomy( substr( $r->element_type, 4 ) ) && ! empty( $term_ids[ $r->element_id ] ) && (int) $term_ids[ $r->element_id ]->term_id !== $default_cat ) {
+					} elseif ( 0 === strpos( $r->element_type, 'tax_' ) && $this->is_translated_taxonomy( substr( $r->element_type, 4 ) ) && ! empty( $term_ids[ $r->element_id ] ) && (int) $term_ids[ $r->element_id ]->term_id !== $default_cat ) {
 						// $wpdb->prepare is overkill and unnecessary here (dealing with integers)
 						$term_languages[] = '(' . (int) $term_ids[ $r->element_id ]->term_id . ', ' . (int) $languages[ $r->language_code ]->tl_term_taxonomy_id . ')';
 					}
@@ -218,9 +218,9 @@ class Processor {
 					// Arrange translations in a convenient way.
 					if ( 'tax_nav_menu' === $r->element_type && ! empty( $term_ids[ $r->element_id ] ) ) {
 						$icl_translations['nav_menu'][ $r->trid ][ $r->language_code ] = (int) $term_ids[ $r->element_id ]->term_id;
-					} elseif ( 0 === strpos( $r->element_type, 'post_' ) && $this->_is_translated_post_type( substr( $r->element_type, 5 ) ) ) {
+					} elseif ( 0 === strpos( $r->element_type, 'post_' ) && $this->is_translated_post_type( substr( $r->element_type, 5 ) ) ) {
 						$icl_translations['post'][ $r->trid ][ $r->language_code ] = (int) $r->element_id;
-					} elseif ( 0 === strpos( $r->element_type, 'tax_' ) && $this->_is_translated_taxonomy( substr( $r->element_type, 4 ) ) && ! empty( $term_ids[ $r->element_id ] ) ) {
+					} elseif ( 0 === strpos( $r->element_type, 'tax_' ) && $this->is_translated_taxonomy( substr( $r->element_type, 4 ) ) && ! empty( $term_ids[ $r->element_id ] ) ) {
 						$icl_translations['term'][ $r->trid ][ $r->language_code ] = (int) $term_ids[ $r->element_id ]->term_id;
 					}
 				}
