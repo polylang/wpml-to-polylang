@@ -1,0 +1,156 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Call to method add_entry\\(\\) on an unknown class PLL_MO\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Call to method add_language\\(\\) on an unknown class PLL_Admin_Model\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Call to method clean_languages_cache\\(\\) on an unknown class PLL_Admin_Model\\.$#"
+			count: 2
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Call to method export_to_db\\(\\) on an unknown class PLL_MO\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Call to method get_language\\(\\) on an unknown class PLL_Admin_Model\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Call to method get_languages_list\\(\\) on an unknown class PLL_Admin_Model\\.$#"
+			count: 3
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Call to method get_objects_with_no_lang\\(\\) on an unknown class PLL_Admin_Model\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Call to method make_entry\\(\\) on an unknown class PLL_MO\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Call to method set_language_in_mass\\(\\) on an unknown class PLL_Admin_Model\\.$#"
+			count: 2
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access an offset on mixed\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access offset 'default_lang' on mixed\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access offset 'domains' on mixed\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access offset 'force_lang' on mixed\\.$#"
+			count: 3
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access offset 'hide_default' on mixed\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access offset 'post_types' on mixed\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access offset 'redirect_lang' on mixed\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access offset 'rewrite' on mixed\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access offset 'sync' on mixed\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access offset 'taxonomies' on mixed\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access offset \\(int\\|string\\) on mixed\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access property \\$description on int\\|string\\|WP_Term\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot access property \\$term_taxonomy_id on int\\|string\\|WP_Term\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Constant POLYLANG_DIR not found\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Instantiated class PLL_MO not found\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Offset 'nav_menu' does not exist on array\\{\\}\\|array\\{nav_menu\\?\\: non\\-empty\\-array\\<int\\|string, non\\-empty\\-array\\<int\\|string, int\\>\\>, post\\?\\: non\\-empty\\-array\\<int\\|string, non\\-empty\\-array\\<int\\|string, int\\>\\>, term\\?\\: non\\-empty\\-array\\<int\\|string, non\\-empty\\-array\\<int\\|string, int\\>\\>\\}\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Offset 'post'\\|'term' does not exist on array\\{nav_menu\\?\\: non\\-empty\\-array\\<int\\|string, non\\-empty\\-array\\<int\\|string, int\\>\\>, post\\?\\: non\\-empty\\-array\\<int\\|string, non\\-empty\\-array\\<int\\|string, int\\>\\>, term\\?\\: non\\-empty\\-array\\<int\\|string, non\\-empty\\-array\\<int\\|string, int\\>\\>\\}\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Parameter \\#1 \\$key of function wp_cache_delete expects int\\|string, mixed given\\.$#"
+			count: 4
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Property WPML_To_Polylang\\:\\:\\$icl_settings \\(array\\) does not accept mixed\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
+
+		-
+			message: "#^Property WPML_To_Polylang\\:\\:\\$model has unknown class PLL_Admin_Model as its type\\.$#"
+			count: 1
+			path: wpml-to-polylang.php
