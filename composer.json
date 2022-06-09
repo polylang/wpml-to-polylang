@@ -8,13 +8,14 @@
 		"php": ">=5.6"
 	},
 	"require-dev": {
+		"phpstan/phpstan": "<1.7",
+		"wpsyntex/polylang-phpstan": "^1.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "*",
 		"wp-coding-standards/wpcs": "*",
 		"automattic/vipwpcs": "*",
 		"phpcompatibility/phpcompatibility-wp": "*",
 		"szepeviktor/phpstan-wordpress": "*",
-		"php-stubs/woocommerce-stubs": "*",
-		"wpsyntex/polylang-stubs": "dev-master"
+		"php-stubs/woocommerce-stubs": "*"
 	},
 	"config": {
 		"allow-plugins": {

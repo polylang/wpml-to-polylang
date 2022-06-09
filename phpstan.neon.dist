@@ -8,6 +8,3 @@ parameters:
 		- POLYLANG_VERSION
 	checkMissingIterableValueType: false
 	ignoreErrors:
-		- '#^Function apply_filters invoked with [34567] parameters, 2 required\.$#'
-	bootstrapFiles:
-		- vendor/wpsyntex/polylang-stubs/bootstrap.php
