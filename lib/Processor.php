@@ -40,7 +40,7 @@ class Processor {
 	 */
 	public function __construct() {
 		$this->icl_settings = \get_option( 'icl_sitepress_settings' );
-		$this->model        = $GLOBALS['polylang']->model;
+		$this->model = $GLOBALS['polylang']->model;
 		$this->import();
 	}
 
@@ -155,11 +155,11 @@ class Processor {
 					continue;
 				}
 
-				$lang['term_group']     = 0;
+				$lang['term_group'] = 0;
 				$lang['no_default_cat'] = 1; // Prevent the creation of a new default category.
 
 				// We need a flag and can be more exhaustive for the rtl languages list.
-				$lang['rtl']  = 'rtl' === $languages[ $lang['locale'] ]['dir'] ? 1 : 0;
+				$lang['rtl'] = 'rtl' === $languages[ $lang['locale'] ]['dir'] ? 1 : 0;
 				$lang['flag'] = $languages[ $lang['locale'] ]['flag'];
 
 				$this->model->add_language( $lang );
@@ -312,7 +312,7 @@ class Processor {
 		$taxonomies = array_chunk( $taxonomies, WPML_TO_POLYLANG_QUERY_BATCH_SIZE );
 		foreach ( $taxonomies as $chunk ) {
 			$_tmp_term_ids = $wpdb->get_results( "SELECT term_taxonomy_id, term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy IN ('" . implode( "', '", $chunk ) . "')", OBJECT_K ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$term_ids      = array_merge( $term_ids, $_tmp_term_ids );
+			$term_ids = array_merge( $term_ids, $_tmp_term_ids );
 		}
 
 		// Free memory.
@@ -338,12 +338,12 @@ class Processor {
 		Status::update( Status::STATUS_PROCESSING_POST_TERM_TRANSLATIONS );
 
 		foreach ( array( 'post', 'term' ) as $type ) {
-			$terms       = array();
-			$slugs       = array();
+			$terms = array();
+			$slugs = array();
 			$description = array();
-			$count       = array();
-			$tts         = array();
-			$trs         = array();
+			$count = array();
+			$tts = array();
+			$trs = array();
 
 			if ( empty( $icl_translations[ $type ] ) ) {
 				continue;
@@ -363,7 +363,7 @@ class Processor {
 				$slugs[] = $term;
 
 				$description[ $term ] = serialize( $t );
-				$count[ $term ]       = count( $t );
+				$count[ $term ] = count( $t );
 			}
 			$terms = array_unique( $terms );
 
@@ -384,7 +384,7 @@ class Processor {
 			$slugs = array_chunk( $slugs, WPML_TO_POLYLANG_QUERY_BATCH_SIZE );
 			foreach ( $slugs as $chunk ) {
 				$_tmp_terms = $wpdb->get_results( "SELECT term_id, slug FROM {$wpdb->terms} WHERE slug IN ('" . implode( "','", $chunk ) . "')" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				$terms      = array_merge( $terms, $_tmp_terms );
+				$terms = array_merge( $terms, $_tmp_terms );
 			}
 
 
@@ -452,8 +452,8 @@ class Processor {
 		Status::update( Status::STATUS_PROCESSING_NAV_MENU_TRANSLATIONS );
 
 		// Nav menus.
-		$options   = \get_option( 'polylang' );
-		$theme     = \get_option( 'stylesheet' );
+		$options = \get_option( 'polylang' );
+		$theme = \get_option( 'stylesheet' );
 		$locations = \get_nav_menu_locations(); // FIXME does not work (looks good to me, not sure why this is here).
 
 		if ( ! empty( $locations ) && ! empty( $icl_translations['nav_menu'] ) ) {
@@ -501,21 +501,33 @@ class Processor {
 
 		$string_translations = array();
 
-		/**
-		 * WPML string translations.
-		 *
-		 * @var stdClass[]
-		 */
-		$results = $wpdb->get_results(
-			"SELECT s.value AS string, st.language, st.value AS translation
-			FROM {$wpdb->prefix}icl_strings AS s
-			INNER JOIN {$wpdb->prefix}icl_string_translations AS st ON st.string_id = s.id"
-		);
+		// Paginate the string translations.
+		$total_records = (int) $wpdb->get_var( "SELECT COUNT(1) as total FROM {$wpdb->prefix}icl_strings AS s INNER JOIN {$wpdb->prefix}icl_string_translations AS st ON st.string_id = s.id" );
+		$total_pages   = (int) ceil( $total_records / WPML_TO_POLYLANG_QUERY_BATCH_SIZE );
+		for ( $page = 1; $page <= $total_pages; $page ++ ) {
+			$offset = ( $page * WPML_TO_POLYLANG_QUERY_BATCH_SIZE ) - WPML_TO_POLYLANG_QUERY_BATCH_SIZE;
 
-		// Order them in a convenient way.
-		foreach ( $results as $st ) {
-			if ( ! empty( $st->string ) ) {
-				$string_translations[ $st->language ][] = array( $st->string, $st->translation );
+			/**
+			 * WPML string translations.
+			 *
+			 * @var stdClass[]
+			 */
+			$results = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT s.value AS string, st.language, st.value AS translation 
+						FROM {$wpdb->prefix}icl_strings AS s 
+							INNER JOIN {$wpdb->prefix}icl_string_translations AS st ON st.string_id = s.id 
+						LIMIT %d, %d",
+					$offset,
+					WPML_TO_POLYLANG_QUERY_BATCH_SIZE
+				)
+			);
+
+			// Order them in a convenient way.
+			foreach ( $results as $st ) {
+				if ( ! empty( $st->string ) ) {
+					$string_translations[ $st->language ][] = array( $st->string, $st->translation );
+				}
 			}
 		}
 
@@ -532,6 +544,11 @@ class Processor {
 				}
 			}
 		}
+
+		// Free memory.
+		$string_translations = null;
+		unset( $string_translations );
+		time_nanosleep( 0, 10000000 );
 	}
 
 	/**
@@ -545,8 +562,8 @@ class Processor {
 
 		$options = \get_option( 'polylang' );
 
-		$options['rewrite']       = 1; // Remove /language/ in permalinks ( was the opposite before 0.7.2 ).
-		$options['hide_default']  = 1; // Remove URL language information for default language.
+		$options['rewrite'] = 1; // Remove /language/ in permalinks ( was the opposite before 0.7.2 ).
+		$options['hide_default'] = 1; // Remove URL language information for default language.
 		$options['redirect_lang'] = 1; // Redirect the language page to the homepage.
 
 		// Default language.
@@ -571,15 +588,15 @@ class Processor {
 
 		// Post types.
 		if ( ! empty( $this->icl_settings['custom_posts_sync_option'] ) ) {
-			$post_types            = array_keys( array_filter( $this->icl_settings['custom_posts_sync_option'] ) );
-			$post_types            = array_diff( $post_types, array( 'post', 'page', 'attachment', 'wp_block' ) );
+			$post_types = array_keys( array_filter( $this->icl_settings['custom_posts_sync_option'] ) );
+			$post_types = array_diff( $post_types, array( 'post', 'page', 'attachment', 'wp_block' ) );
 			$options['post_types'] = $post_types;
 		}
 
 		// Taxonomies.
 		if ( ! empty( $this->icl_settings['taxonomies_sync_option'] ) ) {
-			$taxonomies            = array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) );
-			$taxonomies            = array_diff( $taxonomies, array( 'category', 'post_tag' ) );
+			$taxonomies = array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) );
+			$taxonomies = array_diff( $taxonomies, array( 'category', 'post_tag' ) );
 			$options['taxonomies'] = $taxonomies;
 		}
 
