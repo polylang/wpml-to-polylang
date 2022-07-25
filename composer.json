@@ -13,7 +13,8 @@
 		"automattic/vipwpcs": "*",
 		"phpcompatibility/phpcompatibility-wp": "*",
 		"szepeviktor/phpstan-wordpress": "*",
-		"php-stubs/woocommerce-stubs": "*",
+		"phpstan/phpstan": "<1.7",
+		"wpsyntex/polylang-phpstan": "^1.0",
 		"wpsyntex/polylang-stubs": "dev-master"
 	},
 	"scripts": {
