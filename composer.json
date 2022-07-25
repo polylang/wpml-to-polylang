@@ -13,13 +13,35 @@
 		"automattic/vipwpcs": "*",
 		"phpcompatibility/phpcompatibility-wp": "*",
 		"szepeviktor/phpstan-wordpress": "*",
-		"php-stubs/woocommerce-stubs": "*",
+		"phpstan/phpstan": "<1.7",
+		"wpsyntex/polylang-phpstan": "^1.0",
 		"wpsyntex/polylang-stubs": "dev-master"
 	},
+<<<<<<< HEAD
 	"autoload": {
 		"classmap": [
 			"lib/"
 		]
+=======
+	"scripts": {
+		"test":"vendor/bin/phpunit",
+		"cs":"vendor/bin/phpcs",
+		"stan": "vendor/bin/phpstan analyze --memory-limit=400M",
+		"lint": [
+			"@cs",
+			"@stan"
+		],
+		"build": "bin/build.sh",
+		"dist": "bin/distribute.sh"
+	},
+	"scripts-descriptions": {
+		"test":"Runs PHPUnit tests.",
+		"cs":"Runs PHPCS linter.",
+		"stan": "Runs PHPStan analysis.",
+		"lint": "Runs both PHPCS and PHPStan.",
+		"build": "Builds the project.",
+		"dist": "Make the zip file to distibute the project release."
+>>>>>>> master
 	},
 	"config": {
 		"allow-plugins": {
