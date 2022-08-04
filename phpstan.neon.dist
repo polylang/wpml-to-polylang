@@ -3,7 +3,7 @@ includes:
 parameters:
 	level: max
 	paths:
-		- wpml-to-polylang.php
+		- src/
 	dynamicConstantNames:
 		- POLYLANG_VERSION
 	checkMissingIterableValueType: false
