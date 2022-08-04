@@ -208,8 +208,6 @@ class Processor {
 
 			foreach ( $results as $r ) {
 				if ( ! empty( $r->language_code ) && ! empty( $languages[ $r->language_code ] ) ) {
-					// TODO Optimize this.
-
 					// Posts and terms languages.
 					if ( 0 === strpos( $r->element_type, 'post_' ) && $this->is_translated_post_type( substr( $r->element_type, 5 ) ) ) {
 						// $wpdb->prepare is overkill and unnecessary here (dealing with integers)
@@ -293,29 +291,28 @@ class Processor {
 		* Required as WPML stores term_taxonomy_id in icl_translations while Polylang translates term_id.
 		* Thanks to Nickness. See http://wordpress.org/support/topic/wpml-languages-import-is-broken-with-last-polylang-update-15-16
 		*/
+
 		$_taxonomies = array( 'category', 'post_tag', 'nav_menu' );
 		if ( ! empty( $this->icl_settings['taxonomies_sync_option'] ) ) {
 			$_taxonomies = array_merge( $_taxonomies, array_keys( array_filter( $this->icl_settings['taxonomies_sync_option'] ) ) );
 		}
 
-		$taxonomies = array();
-		foreach ( $_taxonomies as $tax ) {
-			// $wpdb->prepare is not needed here, this is fresh from the DB (if this is corrupt, they have bigger issues).
-			$taxonomies[] = $tax;
+		$term_ids   = array();
+		$taxonomies = array_chunk( $_taxonomies, WPML_TO_POLYLANG_QUERY_BATCH_SIZE );
+		foreach ( $taxonomies as $chunk ) {
+			$_tmp_term_ids = $wpdb->get_results( "SELECT term_taxonomy_id, term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy IN ('" . implode( "', '", $chunk ) . "')", OBJECT_K ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+			// Build term_ids properly so translations are matched properly.
+			if ( ! empty( $_tmp_term_ids ) ) {
+                foreach ( $_tmp_term_ids as $row ) {
+                    $term_ids[ $row->term_taxonomy_id ] = $row;
+                }
+            }
 		}
+
 		// Free memory.
 		$_taxonomies = null;
 		unset( $_taxonomies );
-		time_nanosleep( 0, 10000000 );
-
-		$term_ids   = array();
-		$taxonomies = array_chunk( $taxonomies, WPML_TO_POLYLANG_QUERY_BATCH_SIZE );
-		foreach ( $taxonomies as $chunk ) {
-			$_tmp_term_ids = $wpdb->get_results( "SELECT term_taxonomy_id, term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy IN ('" . implode( "', '", $chunk ) . "')", OBJECT_K ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$term_ids = array_merge( $term_ids, $_tmp_term_ids );
-		}
-
-		// Free memory.
 		$taxonomies = null;
 		unset( $taxonomies );
 		$_tmp_term_ids = null;
