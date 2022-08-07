@@ -62,7 +62,7 @@ abstract class AbstractAction {
 	 * @return void
 	 */
 	public function ajaxResponse() {
-		check_ajax_referer( 'wpml_to_polylang_action', 'nonce' );
+		check_ajax_referer( 'wpml-importer', '_wpnonce_wpml-importer' );
 
 		if ( empty( $_POST['action'] ) ) {
 			wp_die(); // Somethings's wrong.
