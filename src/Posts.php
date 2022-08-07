@@ -99,7 +99,7 @@ class Posts extends AbstractObjects {
 	 * Gets the WPML term translations.
 	 *
 	 * @param int[] $trids WPML translation ids.
-	 * @return array
+	 * @return \stdClass[]
 	 */
 	protected function getWPMLTranslations( $trids ) {
 		global $wpdb;

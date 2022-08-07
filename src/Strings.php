@@ -91,7 +91,7 @@ class Strings extends AbstractAction {
 	/**
 	 * Gets the WPML Strings translations.
 	 *
-	 * @return array
+	 * @return string[][][]
 	 */
 	protected function getWPMLStringsTranslations() {
 		global $wpdb;
