@@ -65,10 +65,10 @@ abstract class AbstractAction {
 		check_ajax_referer( 'wpml-importer', '_wpnonce_wpml-importer' );
 
 		if ( empty( $_POST['action'] ) ) {
-			wp_die(); // Somethings's wrong.
+			wp_die(); // Something's wrong.
 		}
 
-		$this->step = isset( $_POST['step'] ) ? absint( $_POST['step'] ) : 0;
+		$this->step = isset( $_POST['step'] ) ? absint( $_POST['step'] ) : 1;
 
 		$this->handle();
 
@@ -76,7 +76,7 @@ abstract class AbstractAction {
 			'action'     => sanitize_key( $_POST['action'] ),
 			'message'    => $this->getMessage(),
 			'percentage' => $this->getPercentage(),
-			'step'       => $this->step++,
+			'step'       => ++$this->step,
 		];
 
 		if ( 100 === $response['percentage'] ) {
