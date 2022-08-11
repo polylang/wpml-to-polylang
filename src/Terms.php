@@ -83,7 +83,7 @@ class Terms extends AbstractObjects {
 	protected function getWPMLTranslationIds() {
 		global $wpdb;
 
-		$trids = $wpdb->get_results(
+		$trids = $wpdb->get_col(
 			sprintf(
 				"SELECT DISTINCT wpml.trid
 				FROM {$wpdb->term_taxonomy} AS tt

@@ -74,7 +74,9 @@ abstract class AbstractObjects extends AbstractSteppable {
 
 		$relations = array_unique( $relations );
 
-		$wpdb->query( "INSERT INTO {$wpdb->term_relationships} (object_id, term_taxonomy_id) VALUES " . implode( ',', $relations ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		if ( ! empty( $relations ) ) {
+			$wpdb->query( "INSERT INTO {$wpdb->term_relationships} (object_id, term_taxonomy_id) VALUES " . implode( ',', $relations ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		}
 	}
 
 	/**
@@ -96,7 +98,7 @@ abstract class AbstractObjects extends AbstractSteppable {
 		$terms = [];
 
 		foreach ( $groupedTranslations as $name => $t ) {
-			$terms[] = sprintf( '(%s, %s)', $name, $name );
+			$terms[] = $wpdb->prepare( '(%s, %s)', $name, $name );
 		}
 
 		$terms = array_unique( $terms );
@@ -110,7 +112,7 @@ abstract class AbstractObjects extends AbstractSteppable {
 		$terms = $wpdb->get_results(
 			sprintf(
 				"SELECT term_id, slug FROM $wpdb->terms WHERE slug IN ( '%s' )",
-				implode( ',', esc_sql( array_keys( $groupedTranslations ) ) )
+				implode( "', '", esc_sql( array_keys( $groupedTranslations ) ) )
 			)
 		);
 
@@ -128,7 +130,7 @@ abstract class AbstractObjects extends AbstractSteppable {
 
 		$tts = array_unique( $tts );
 
-		// Insert term taxonomy par of terms.
+		// Insert term taxonomy part of terms.
 		if ( ! empty( $tts ) ) {
 			$wpdb->query( "INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, count) VALUES " . implode( ',', $tts ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
@@ -136,8 +138,10 @@ abstract class AbstractObjects extends AbstractSteppable {
 		// Get all terms with their term taxonomy id.
 		$terms = get_terms(
 			[
-				'taxonomy'   => $this->getTranslationTaxonomy(),
-				'hide_empty' => false,
+				'taxonomy'               => $this->getTranslationTaxonomy(),
+				'slug'                   => array_keys( $groupedTranslations ),
+				'hide_empty'             => false,
+				'update_term_meta_cache' => false,
 			]
 		);
 

@@ -80,7 +80,7 @@ class Posts extends AbstractObjects {
 	protected function getWPMLTranslationIds() {
 		global $wpdb;
 
-		$trids = $wpdb->get_results(
+		$trids = $wpdb->get_col(
 			sprintf(
 				"SELECT DISTINCT trid
 				FROM {$wpdb->prefix}icl_translations
