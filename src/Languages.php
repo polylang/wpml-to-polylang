@@ -56,7 +56,7 @@ class Languages extends AbstractAction {
 	}
 
 	/**
-	 * Deletes the translation group of the default category to avoid a conflict later.
+	 * Deletes the language and translation group of the default category to avoid a conflict later.
 	 *
 	 * @return void
 	 */
@@ -73,6 +73,11 @@ class Languages extends AbstractAction {
 			foreach ( $termIds as $termId ) {
 				wp_delete_term( $termId, 'term_translations' );
 			}
+		}
+
+		$defaultCat = get_option( 'default_category' );
+		if ( is_scalar( $defaultCat ) ) {
+			wp_delete_object_term_relationships( $defaultCat, 'term_language' );
 		}
 
 		PLL()->model->clean_languages_cache(); // Update the languages list.
