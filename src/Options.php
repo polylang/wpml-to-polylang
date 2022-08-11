@@ -75,7 +75,8 @@ class Options extends AbstractAction {
 			$post_types = array_keys( array_filter( $wpml_settings['custom_posts_sync_option'] ) );
 			$post_types = array_diff( $post_types, [ 'post', 'page', 'attachment', 'wp_block' ] );
 
-			$options['post_types'] = $post_types;
+			$options['post_types']    = $post_types;
+			$options['media_support'] = (int) ! empty( $wpml_settings['custom_posts_sync_option']['attachment'] );
 		}
 
 		// Taxonomies.
