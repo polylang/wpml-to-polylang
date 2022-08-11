@@ -56,26 +56,6 @@ class Languages extends AbstractAction {
 	}
 
 	/**
-	 * Add hooks.
-	 *
-	 * @return void
-	 */
-	public function addHooks() {
-		parent::addHooks();
-
-		add_filter( 'filterModel', [ $this, 'filterModel' ] );
-	}
-
-	/**
-	 * Uses PLL_Admin_Model to be able to create languages.
-	 *
-	 * @return string
-	 */
-	public function filterModel() {
-		return 'PLL_Admin_Model';
-	}
-
-	/**
 	 * Deletes the translation group of the default category to avoid a conflict later.
 	 *
 	 * @return void

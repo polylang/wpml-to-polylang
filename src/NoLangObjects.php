@@ -59,24 +59,4 @@ class NoLangObjects extends AbstractAction {
 			$nolang = PLL()->model->get_objects_with_no_lang( WPML_TO_POLYLANG_QUERY_BATCH_SIZE );
 		}
 	}
-
-	/**
-	 * Add hooks.
-	 *
-	 * @return void
-	 */
-	public function addHooks() {
-		parent::addHooks();
-
-		add_filter( 'filterModel', [ $this, 'filterModel' ] );
-	}
-
-	/**
-	 * Uses PLL_Admin_Model to be able to create languages.
-	 *
-	 * @return string
-	 */
-	public function filterModel() {
-		return 'PLL_Admin_Model';
-	}
 }

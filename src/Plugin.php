@@ -12,11 +12,21 @@ namespace WP_Syntex\WPML_To_Polylang;
  */
 class Plugin {
 	/**
+	 * Uses PLL_Admin_Model to be able to create languages.
+	 *
+	 * @return string
+	 */
+	public function filterModel() {
+		return 'PLL_Admin_Model';
+	}
+
+	/**
 	 * Initializes the plugin.
 	 *
 	 * @return void
 	 */
 	public function init() {
+		add_filter( 'pll_model', [ $this, 'filterModel' ] );
 
 		$actions = [
 			new Languages(),
