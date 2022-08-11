@@ -10,7 +10,7 @@ namespace WP_Syntex\WPML_To_Polylang;
 /**
  * Abstract class to handle the translations of objects, typically posts or terms.
  */
-abstract class AbstractObjects extends AbstractAction {
+abstract class AbstractObjects extends AbstractSteppable {
 
 	/**
 	 * Gets the languages term taxonomy ids related to this object type.
@@ -18,13 +18,6 @@ abstract class AbstractObjects extends AbstractAction {
 	 * @return int[]
 	 */
 	abstract protected function getLanguageTermTaxonomyIds();
-
-	/**
-	 * Returns the number of WPML term translations.
-	 *
-	 * @return int
-	 */
-	abstract protected function getTotal();
 
 	/**
 	 * Returns the translation taxonomy name.
@@ -58,19 +51,6 @@ abstract class AbstractObjects extends AbstractAction {
 		$translations = $this->getWPMLTranslations( $trids );
 		$this->processLanguages( $translations );
 		$this->processTranslations( $translations );
-	}
-
-	/**
-	 * Returns the action completion percentage.
-	 *
-	 * @return int
-	 */
-	protected function getPercentage() {
-		$total      = $this->getTotal();
-		$percentage = ( $this->step * WPML_TO_POLYLANG_QUERY_BATCH_SIZE ) / $total * 100;
-		$percentage = (int) ceil( $percentage );
-
-		return $percentage > 100 ? 100 : $percentage;
 	}
 
 	/**

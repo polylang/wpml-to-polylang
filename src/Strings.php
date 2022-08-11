@@ -10,7 +10,7 @@ namespace WP_Syntex\WPML_To_Polylang;
 /**
  * Handles the strings translations.
  */
-class Strings extends AbstractAction {
+class Strings extends AbstractSteppable {
 
 	/**
 	 * Returns the action name.
@@ -58,19 +58,6 @@ class Strings extends AbstractAction {
 
 			$mo->export_to_db( $language );
 		}
-	}
-
-	/**
-	 * Returns the action completion percentage.
-	 *
-	 * @return int
-	 */
-	protected function getPercentage() {
-		$total      = $this->getTotal();
-		$percentage = ( $this->step * WPML_TO_POLYLANG_QUERY_BATCH_SIZE ) / $total * 100;
-		$percentage = (int) ceil( $percentage );
-
-		return $percentage > 100 ? 100 : $percentage;
 	}
 
 	/**
