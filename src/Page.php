@@ -37,6 +37,7 @@ class Page {
 	 */
 	public function addHooks() {
 		add_action( 'admin_menu', [ $this, 'addMenus' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'addScripts' ] );
 	}
 
 	/**
@@ -55,6 +56,20 @@ class Page {
 			'wpml-importer',
 			[ $this, 'display' ]
 		);
+	}
+
+	/**
+	 * Enqueues scripts.
+	 *
+	 * @return void
+	 */
+	public function addScripts() {
+		$screen = get_current_screen();
+		if ( empty( $screen ) || 'tools_page_wpml-importer' !== $screen->base ) {
+			return;
+		}
+
+		wp_enqueue_script( 'wpml-importer', plugins_url( 'js/index.js', __DIR__ ), [ 'jquery', 'wp-ajax-response' ], true );
 	}
 
 	/**
