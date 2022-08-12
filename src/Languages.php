@@ -78,8 +78,8 @@ class Languages extends AbstractAction {
 		}
 
 		$defaultCat = get_option( 'default_category' );
-		if ( is_scalar( $defaultCat ) ) {
-			wp_delete_object_term_relationships( $defaultCat, 'term_language' );
+		if ( is_numeric( $defaultCat ) ) {
+			wp_delete_object_term_relationships( (int) $defaultCat, 'term_language' );
 		}
 
 		PLL()->model->clean_languages_cache(); // Update the languages list.
