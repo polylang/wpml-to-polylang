@@ -72,19 +72,24 @@ abstract class AbstractAction {
 
 		$this->handle();
 
+		$percentage = $this->getPercentage(); // Save the value before we increment the step.
+		$message    = sprintf( '%s : %d%%', $this->getMessage(), $percentage );
+
 		$response = [
-			'action'     => sanitize_key( $_POST['action'] ),
-			'message'    => $this->getMessage(),
-			'percentage' => $this->getPercentage(),
-			'step'       => ++$this->step,
+			'action'  => sanitize_key( $_POST['action'] ),
+			'message' => $message,
+			'step'    => ++$this->step,
 		];
 
-		if ( 100 === $response['percentage'] ) {
+		if ( 100 === $percentage ) {
 			if ( ! empty( $this->next ) ) {
 				$response['action'] = $this->next;
 				$response['step']   = 1;
 			} else {
-				$response = [ 'done' => true ];
+				$response = [
+					'done'    => true,
+					'message' => esc_html__( 'Done!', 'wpml-to-polylang' ),
+				];
 			}
 		}
 

@@ -43,6 +43,7 @@ namespace WP_Syntex\WPML_To_Polylang;
 
 defined( 'ABSPATH' ) || exit;
 
+define( 'WPML_TO_POLYLANG_VERSION', '0.5-dev' );
 define( 'WPML_TO_POLYLANG_MIN_WP_VERSION', '4.9' );
 define( 'WPML_TO_POLYLANG_MIN_PLL_VERSION', '2.8' );
 

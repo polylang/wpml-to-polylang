@@ -69,7 +69,7 @@ class Page {
 			return;
 		}
 
-		wp_enqueue_script( 'wpml-importer', plugins_url( 'js/index.js', __DIR__ ), [ 'jquery', 'wp-ajax-response' ], true );
+		wp_enqueue_script( 'wpml-importer', plugins_url( 'js/index.js', __DIR__ ), [ 'jquery', 'wp-ajax-response' ], WPML_TO_POLYLANG_VERSION, true );
 	}
 
 	/**
@@ -109,6 +109,7 @@ class Page {
 				<input type="hidden" name="action" value="<?php echo esc_attr( $this->action ); ?>">
 				<?php wp_nonce_field( 'wpml-importer', '_wpnonce_wpml-importer' ); ?>
 				<?php submit_button( __( 'Import', 'wpml-to-polylang' ) ); ?>
+				<div id="wpml-importer-status"></div>
 			</form>
 		</div>
 		<?php

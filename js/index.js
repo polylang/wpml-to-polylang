@@ -1,6 +1,12 @@
 jQuery(
 	function( $ ) {
+		/**
+		 * Batch processing to migrate WPML data to Polylang.
+		 */
 		window.WPMLToPolylang = {
+			/**
+			 * Disables the submit button and fires the batch process.
+			 */
 			init: function() {
 				const self = this;
 
@@ -19,6 +25,9 @@ jQuery(
 				);
 			},
 
+			/**
+			 * Transforms submitted form in a convenient array of data.
+			 */
 			formToArray: function( form ) {
 				var ret = {};
 
@@ -30,6 +39,9 @@ jQuery(
 				return ret;
 			},
 
+			/**
+			 * Sends the ajax request.
+			 */
 			process: function( data, self ) {
 				$.post(
 					{
@@ -43,9 +55,13 @@ jQuery(
 				);
 			},
 
+			/**
+			 * Processes the ajax response.
+			 */
 			success: function( response, data, self ) {
-				if ( response.done ) {
-				} else {
+				$( '#wpml-importer-status' ).text( response.message );
+
+				if ( ! response.done ) {
 					data['action'] = response.action;
 					data['step']   = response.step;
 					self.process( data, self );
