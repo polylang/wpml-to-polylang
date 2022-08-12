@@ -75,7 +75,7 @@ class Options extends AbstractAction {
 		// Post types.
 		if ( ! empty( $wpml_settings['custom_posts_sync_option'] ) ) {
 			$post_types = array_keys( array_filter( $wpml_settings['custom_posts_sync_option'] ) );
-			$post_types = array_diff( $post_types, [ 'post', 'page', 'attachment', 'wp_block' ] );
+			$post_types = array_diff( $post_types, get_post_types( [ '_builtin' => true ] ) );
 
 			$options['post_types']    = $post_types;
 			$options['media_support'] = (int) ! empty( $wpml_settings['custom_posts_sync_option']['attachment'] );
@@ -84,7 +84,7 @@ class Options extends AbstractAction {
 		// Taxonomies.
 		if ( ! empty( $wpml_settings['taxonomies_sync_option'] ) ) {
 			$taxonomies = array_keys( array_filter( $wpml_settings['taxonomies_sync_option'] ) );
-			$taxonomies = array_diff( $taxonomies, [ 'category', 'post_tag' ] );
+			$taxonomies = array_diff( $taxonomies, get_taxonomies( [ '_builtin' => true ] ) );
 
 			$options['taxonomies'] = $taxonomies;
 		}
