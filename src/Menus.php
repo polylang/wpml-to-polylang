@@ -52,9 +52,29 @@ class Menus extends AbstractAction {
 			return;
 		}
 
-		foreach ( array_keys( $locations ) as $loc ) {
-			foreach ( $translations as $translation ) {
-				$options['nav_menus'][ $theme ][ $loc ][ $translation->language_code ] = $translation->term_id;
+		$tr_locations = [];
+
+		// Associate translation ids to nav menu locations.
+		foreach ( $locations as $location => $loc_menu_id ) {
+			if ( empty( $loc_menu_id ) ) {
+				continue; // This eliminates our translated locations.
+			}
+
+			foreach ( $translations as $trid => $menus ) {
+				foreach ( $menus as $menu_id ) {
+					if ( $menu_id === $loc_menu_id ) {
+						$tr_locations[ $trid ] = $location;
+					}
+				}
+			}
+		}
+
+		// Build nav_menus option.
+		foreach ( $translations as $trid => $menus ) {
+			if ( isset( $tr_locations[ $trid ] ) ) {
+				foreach ( $menus as $lang => $menu_id ) {
+					$options['nav_menus'][ $theme ][ $tr_locations[ $trid ] ][ $lang ] = $menu_id;
+				}
 			}
 		}
 
@@ -64,18 +84,26 @@ class Menus extends AbstractAction {
 	/**
 	 * Gets the WPML menu translations.
 	 *
-	 * @return \stdClass[]
+	 * @return int[][]
 	 */
 	protected function getWPMLTranslations() {
 		global $wpdb;
 
-		return $wpdb->get_results(
-			"SELECT tt.term_id, wpml.language_code
+		$results = $wpdb->get_results(
+			"SELECT DISTINCT tt.term_id AS id, wpml.language_code, wpml.trid
 			FROM {$wpdb->term_taxonomy} AS tt
 			INNER JOIN {$wpdb->prefix}icl_translations AS wpml
 			ON wpml.element_id = tt.term_taxonomy_id
 			AND wpml.element_type = CONCAT('tax_', tt.taxonomy)
 			WHERE wpml.element_type = 'tax_nav_menu'"
 		);
+
+		$translations = [];
+
+		foreach ( $results as $mt ) {
+			$translations[ $mt->trid ][ $mt->language_code ] = (int) $mt->id;
+		}
+
+		return $translations;
 	}
 }
