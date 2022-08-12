@@ -7,6 +7,8 @@
 
 namespace WP_Syntex\WPML_To_Polylang;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Abstract class for steppable actions.
  */

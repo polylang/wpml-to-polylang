@@ -7,6 +7,8 @@
 
 namespace WP_Syntex\WPML_To_Polylang;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handles the objects with no language.
  *

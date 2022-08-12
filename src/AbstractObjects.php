@@ -7,6 +7,8 @@
 
 namespace WP_Syntex\WPML_To_Polylang;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Abstract class to handle the translations of objects, typically posts or terms.
  */
