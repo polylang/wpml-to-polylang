@@ -79,6 +79,10 @@ abstract class AbstractObjects extends AbstractSteppable {
 		if ( ! empty( $relations ) ) {
 			$wpdb->query( "INSERT INTO {$wpdb->term_relationships} (object_id, term_taxonomy_id) VALUES " . implode( ',', $relations ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
+
+		foreach ( PLL()->model->get_languages_list() as $lang ) {
+			$lang->update_count();
+		}
 	}
 
 	/**
