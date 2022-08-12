@@ -47,7 +47,9 @@ define( 'WPML_TO_POLYLANG_VERSION', '0.5-dev' );
 define( 'WPML_TO_POLYLANG_MIN_WP_VERSION', '4.9' );
 define( 'WPML_TO_POLYLANG_MIN_PLL_VERSION', '2.8' );
 
-define( 'WPML_TO_POLYLANG_QUERY_BATCH_SIZE', 1000 ); // Limits the size of database queries.
+if ( ! defined( 'WPML_TO_POLYLANG_QUERY_BATCH_SIZE' ) ) {
+	define( 'WPML_TO_POLYLANG_QUERY_BATCH_SIZE', 5000 ); // Limits the size of database queries.
+}
 
 require __DIR__ . '/vendor/autoload.php';
 ( new Plugin() )->init();
