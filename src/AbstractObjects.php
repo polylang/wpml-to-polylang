@@ -39,7 +39,7 @@ abstract class AbstractObjects extends AbstractSteppable {
 	 * Gets the WPML term translations.
 	 *
 	 * @param int[] $trids WPML translation ids.
-	 * @return \stdClass[]
+	 * @return int[][]
 	 */
 	abstract protected function getWPMLTranslations( $trids );
 
@@ -51,6 +51,8 @@ abstract class AbstractObjects extends AbstractSteppable {
 	protected function handle() {
 		$trids        = $this->getWPMLTranslationIds();
 		$translations = $this->getWPMLTranslations( $trids );
+		unset( $trids ); // Free some memory.
+
 		$this->processLanguages( $translations );
 		$this->processTranslations( $translations );
 	}
@@ -58,7 +60,7 @@ abstract class AbstractObjects extends AbstractSteppable {
 	/**
 	 * Creates the relationship between the terms and languages.
 	 *
-	 * @param \stdClass[] $translations WPML translations.
+	 * @param int[][] $translations WPML translations.
 	 * @return void
 	 */
 	protected function processLanguages( $translations ) {
@@ -69,8 +71,10 @@ abstract class AbstractObjects extends AbstractSteppable {
 		$relations = [];
 
 		foreach ( $translations as $t ) {
-			if ( ! empty( $t->language_code ) && ! empty( $languages[ $t->language_code ] ) ) {
-				$relations[] = sprintf( '(%d, %d)', (int) $t->id, (int) $languages[ $t->language_code ] );
+			foreach ( $t as $language_code => $id ) {
+				if ( ! empty( $languages[ $language_code ] ) ) {
+					$relations[] = sprintf( '(%d, %d)', (int) $id, (int) $languages[ $language_code ] );
+				}
 			}
 		}
 
@@ -88,22 +92,15 @@ abstract class AbstractObjects extends AbstractSteppable {
 	/**
 	 * Creates translation groups.
 	 *
-	 * @param \stdClass[] $translations WPML translations.
+	 * @param int[][] $translations WPML translations.
 	 * @return void
 	 */
 	protected function processTranslations( $translations ) {
 		global $wpdb;
 
-		$groupedTranslations = [];
-
-		// Group translations by translation group.
-		foreach ( $translations as $t ) {
-			$groupedTranslations[ 'pll_wpml_' . $t->trid ][ $t->language_code ] = (int) $t->id;
-		}
-
 		$terms = [];
 
-		foreach ( $groupedTranslations as $name => $t ) {
+		foreach ( $translations as $name => $t ) {
 			$terms[] = $wpdb->prepare( '(%s, %s)', $name, $name );
 		}
 
@@ -118,7 +115,7 @@ abstract class AbstractObjects extends AbstractSteppable {
 		$terms = $wpdb->get_results(
 			sprintf(
 				"SELECT term_id, slug FROM $wpdb->terms WHERE slug IN ( '%s' )",
-				implode( "', '", esc_sql( array_keys( $groupedTranslations ) ) )
+				implode( "', '", esc_sql( array_keys( $translations ) ) )
 			)
 		);
 
@@ -129,8 +126,8 @@ abstract class AbstractObjects extends AbstractSteppable {
 				'(%d, %s, %s, %d)',
 				$term->term_id,
 				$this->getTranslationTaxonomy(),
-				serialize( $groupedTranslations[ $term->slug ] ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
-				count( $groupedTranslations[ $term->slug ] )
+				serialize( $translations[ $term->slug ] ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+				count( $translations[ $term->slug ] )
 			);
 		}
 
@@ -141,11 +138,13 @@ abstract class AbstractObjects extends AbstractSteppable {
 			$wpdb->query( "INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, count) VALUES " . implode( ',', $tts ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 
+		unset( $terms, $tts ); // Free some memory.
+
 		// Get all terms with their term taxonomy id.
 		$terms = get_terms(
 			[
 				'taxonomy'               => $this->getTranslationTaxonomy(),
-				'slug'                   => array_keys( $groupedTranslations ),
+				'slug'                   => array_keys( $translations ),
 				'hide_empty'             => false,
 				'update_term_meta_cache' => false,
 			]
@@ -155,7 +154,7 @@ abstract class AbstractObjects extends AbstractSteppable {
 
 		if ( is_array( $terms ) ) {
 			foreach ( $terms as $term ) {
-				foreach ( $groupedTranslations[ $term->slug ] as $object_id ) {
+				foreach ( $translations[ $term->slug ] as $object_id ) {
 					$trs[] = $wpdb->prepare( '(%d, %d)', $object_id, $term->term_taxonomy_id );
 				}
 			}

@@ -101,12 +101,12 @@ class Posts extends AbstractObjects {
 	 * Gets the WPML term translations.
 	 *
 	 * @param int[] $trids WPML translation ids.
-	 * @return \stdClass[]
+	 * @return int[][]
 	 */
 	protected function getWPMLTranslations( $trids ) {
 		global $wpdb;
 
-		return $wpdb->get_results(
+		$results = $wpdb->get_results(
 			sprintf(
 				"SELECT DISTINCT element_id AS id, language_code, trid
 				FROM {$wpdb->prefix}icl_translations AS wpml
@@ -114,6 +114,15 @@ class Posts extends AbstractObjects {
 				implode( ',', array_map( 'absint', $trids ) ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			)
 		);
+
+		$translations = [];
+
+		// Group translations by translation group.
+		foreach ( $results as $t ) {
+			$translations[ 'pll_wpml_' . $t->trid ][ $t->language_code ] = (int) $t->id;
+		}
+
+		return $translations;
 	}
 
 	/**
