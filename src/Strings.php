@@ -71,9 +71,13 @@ class Strings extends AbstractSteppable {
 		global $wpdb;
 
 		return (int) $wpdb->get_var(
-			"SELECT COUNT(*)
-			FROM {$wpdb->prefix}icl_strings AS s
-			INNER JOIN {$wpdb->prefix}icl_string_translations AS st ON st.string_id = s.id"
+			sprintf(
+				"SELECT COUNT(*)
+				FROM {$wpdb->prefix}icl_strings AS s
+				INNER JOIN {$wpdb->prefix}icl_string_translations AS st ON st.string_id = s.id
+				WHERE s.context NOT IN ( '%s' )",
+				implode( "', '", esc_sql( $this->getDomains() ) )
+			)
 		);
 	}
 
@@ -93,13 +97,15 @@ class Strings extends AbstractSteppable {
 		 * @var \stdClass[]
 		 */
 		$results = $wpdb->get_results(
-			$wpdb->prepare(
+			sprintf(
 				"SELECT s.value AS string, st.language, st.value AS translation
 				FROM {$wpdb->prefix}icl_strings AS s
 				INNER JOIN {$wpdb->prefix}icl_string_translations AS st ON st.string_id = s.id
+				WHERE s.context NOT IN ( '%s' )
 				LIMIT %d, %d",
-				$offset,
-				WPML_TO_POLYLANG_QUERY_BATCH_SIZE
+				implode( "', '", esc_sql( $this->getDomains() ) ),
+				absint( $offset ),
+				absint( WPML_TO_POLYLANG_QUERY_BATCH_SIZE )
 			)
 		);
 
@@ -113,5 +119,26 @@ class Strings extends AbstractSteppable {
 		}
 
 		return $stringTranslations;
+	}
+
+	/**
+	 * Returns mo files text domains stored by WPML.
+	 *
+	 * @return string[]
+	 */
+	protected function getDomains() {
+		global $wpdb;
+
+		if ( ! $wpdb->get_var( "SHOW TABLES LIKE '{$wpdb->prefix}icl_mo_files_domains'" ) ) {
+			return [ '' ]; // A trick to avoid an empty NOT IN in sql query.
+		}
+
+		$domains = $wpdb->get_col( "SELECT DISTINCT domain FROM {$wpdb->prefix}icl_mo_files_domains" );
+
+		if ( empty( $domains ) ) {
+			return [ '' ];
+		}
+
+		return $domains;
 	}
 }
