@@ -107,7 +107,7 @@ class Strings extends AbstractSteppable {
 
 		// Order them in a convenient way.
 		foreach ( $results as $st ) {
-			if ( ! empty( $st->string ) ) {
+			if ( ! empty( $st->string ) & ! empty( $st->translation ) ) {
 				$stringTranslations[ $st->language ][] = [ $st->string, $st->translation ];
 			}
 		}
