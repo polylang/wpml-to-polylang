@@ -141,13 +141,15 @@ abstract class AbstractObjects extends AbstractSteppable {
 		unset( $terms, $tts ); // Free some memory.
 
 		// Get all terms with their term taxonomy id.
-		$terms = get_terms(
-			[
-				'taxonomy'               => $this->getTranslationTaxonomy(),
-				'slug'                   => array_keys( $translations ),
-				'hide_empty'             => false,
-				'update_term_meta_cache' => false,
-			]
+		$terms = $wpdb->get_results(
+			sprintf(
+				"SELECT tt.term_taxonomy_id, t.slug FROM $wpdb->terms AS t
+				INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id
+				WHERE tt.taxonomy = '%s'
+				AND t.slug IN ( '%s' )",
+				esc_sql( $this->getTranslationTaxonomy() ),
+				implode( "', '", esc_sql( array_keys( $translations ) ) )
+			)
 		);
 
 		$trs = [];
