@@ -100,7 +100,7 @@ abstract class AbstractObjects extends AbstractSteppable {
 
 		$terms = [];
 
-		foreach ( $translations as $name => $t ) {
+		foreach ( array_keys( $translations ) as $name ) {
 			$terms[] = $wpdb->prepare( '(%s, %s)', $name, $name );
 		}
 
