@@ -157,7 +157,7 @@ abstract class AbstractObjects extends AbstractSteppable {
 		if ( is_array( $terms ) ) {
 			foreach ( $terms as $term ) {
 				foreach ( $translations[ $term->slug ] as $object_id ) {
-					$trs[] = $wpdb->prepare( '(%d, %d)', $object_id, $term->term_taxonomy_id );
+					$trs[] = sprintf( '(%d, %d)', (int) $object_id, (int) $term->term_taxonomy_id );
 				}
 			}
 		}
