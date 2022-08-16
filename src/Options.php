@@ -11,11 +11,15 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Handles the options.
+ *
+ * @since 0.5
  */
 class Options extends AbstractAction {
 
 	/**
 	 * Returns the action name.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string
 	 */
@@ -26,6 +30,8 @@ class Options extends AbstractAction {
 	/**
 	 * Returns the processing message.
 	 *
+	 * @since 0.5
+	 *
 	 * @return string
 	 */
 	protected function getMessage() {
@@ -34,6 +40,8 @@ class Options extends AbstractAction {
 
 	/**
 	 * Processes the options.
+	 *
+	 * @since 0.5
 	 *
 	 * @return void
 	 */

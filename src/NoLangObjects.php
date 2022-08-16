@@ -14,11 +14,15 @@ defined( 'ABSPATH' ) || exit;
  *
  * In some cases, there is no language assigned in icl_translations table,
  * but WPML displays the default language anyway.
+ *
+ * @since 0.5
  */
 class NoLangObjects extends AbstractAction {
 
 	/**
 	 * Returns the action name.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string
 	 */
@@ -29,6 +33,8 @@ class NoLangObjects extends AbstractAction {
 	/**
 	 * Returns the processing message.
 	 *
+	 * @since 0.5
+	 *
 	 * @return string
 	 */
 	protected function getMessage() {
@@ -37,6 +43,8 @@ class NoLangObjects extends AbstractAction {
 
 	/**
 	 * Processes the objects with no language.
+	 *
+	 * @since 0.5
 	 *
 	 * @return void
 	 */

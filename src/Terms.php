@@ -11,11 +11,15 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Handles the translations of terms.
+ *
+ * @since 0.5
  */
 class Terms extends AbstractObjects {
 
 	/**
 	 * Returns the action name.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string
 	 */
@@ -26,6 +30,8 @@ class Terms extends AbstractObjects {
 	/**
 	 * Returns the processing message.
 	 *
+	 * @since 0.5
+	 *
 	 * @return string
 	 */
 	protected function getMessage() {
@@ -34,6 +40,8 @@ class Terms extends AbstractObjects {
 
 	/**
 	 * Gets the languages term taxonomy ids related to this object type.
+	 *
+	 * @since 0.5
 	 *
 	 * @return int[]
 	 */
@@ -49,6 +57,8 @@ class Terms extends AbstractObjects {
 
 	/**
 	 * Returns the number of WPML term translations.
+	 *
+	 * @since 0.5
 	 *
 	 * @return int
 	 */
@@ -71,6 +81,8 @@ class Terms extends AbstractObjects {
 	/**
 	 * Returns the translation taxonomy name.
 	 *
+	 * @since 0.5
+	 *
 	 * @return string
 	 */
 	protected function getTranslationTaxonomy() {
@@ -79,6 +91,8 @@ class Terms extends AbstractObjects {
 
 	/**
 	 * Gets the WPML term translation ids.
+	 *
+	 * @since 0.5
 	 *
 	 * @return int[]
 	 */
@@ -105,6 +119,8 @@ class Terms extends AbstractObjects {
 
 	/**
 	 * Gets the WPML term translations.
+	 *
+	 * @since 0.5
 	 *
 	 * @param int[] $trids WPML translation ids.
 	 * @return int[][]
@@ -136,6 +152,8 @@ class Terms extends AbstractObjects {
 
 	/**
 	 * Gets the translated taxonomies.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string[]
 	 */

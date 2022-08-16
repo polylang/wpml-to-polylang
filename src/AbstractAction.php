@@ -11,11 +11,15 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract class for actions.
+ *
+ * @since 0.5
  */
 abstract class AbstractAction {
 
 	/**
 	 * Name of the next action to process if any.
+	 *
+	 * @since 0.5
 	 *
 	 * @var string
 	 */
@@ -24,12 +28,16 @@ abstract class AbstractAction {
 	/**
 	 * Current step being processed.
 	 *
+	 * @since 0.5
+	 *
 	 * @var int
 	 */
 	protected $step = 0;
 
 	/**
 	 * Returns the action name.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string
 	 */
@@ -38,6 +46,8 @@ abstract class AbstractAction {
 	/**
 	 * Returns the processing message.
 	 *
+	 * @since 0.5
+	 *
 	 * @return string
 	 */
 	abstract protected function getMessage();
@@ -45,12 +55,16 @@ abstract class AbstractAction {
 	/**
 	 * Processes the action.
 	 *
+	 * @since 0.5
+	 *
 	 * @return void
 	 */
 	abstract protected function handle();
 
 	/**
 	 * Add hooks.
+	 *
+	 * @since 0.5
 	 *
 	 * @return void
 	 */
@@ -60,6 +74,8 @@ abstract class AbstractAction {
 
 	/**
 	 * Handles the ajax response.
+	 *
+	 * @since 0.5
 	 *
 	 * @return void
 	 */
@@ -101,6 +117,8 @@ abstract class AbstractAction {
 	/**
 	 * Sets the next action to process.
 	 *
+	 * @since 0.5
+	 *
 	 * @param string $name Next action name.
 	 * @return void
 	 */
@@ -110,6 +128,8 @@ abstract class AbstractAction {
 
 	/**
 	 * Returns the action completion percentage.
+	 *
+	 * @since 0.5
 	 *
 	 * @return int
 	 */

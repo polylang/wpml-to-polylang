@@ -11,11 +11,15 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract class for steppable actions.
+ *
+ * @since 0.5
  */
 abstract class AbstractSteppable extends AbstractAction {
 
 	/**
 	 * Returns the total number of items to process.
+	 *
+	 * @since 0.5
 	 *
 	 * @return int
 	 */
@@ -23,6 +27,8 @@ abstract class AbstractSteppable extends AbstractAction {
 
 	/**
 	 * Returns the action completion percentage.
+	 *
+	 * @since 0.5
 	 *
 	 * @return int
 	 */

@@ -11,11 +11,15 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Handles the menus.
+ *
+ * @since 0.5
  */
 class Menus extends AbstractAction {
 
 	/**
 	 * Returns the action name.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string
 	 */
@@ -26,6 +30,8 @@ class Menus extends AbstractAction {
 	/**
 	 * Returns the processing message.
 	 *
+	 * @since 0.5
+	 *
 	 * @return string
 	 */
 	protected function getMessage() {
@@ -34,6 +40,8 @@ class Menus extends AbstractAction {
 
 	/**
 	 * Processes the menus.
+	 *
+	 * @since 0.5
 	 *
 	 * @return void
 	 */
@@ -83,6 +91,8 @@ class Menus extends AbstractAction {
 
 	/**
 	 * Gets the WPML menu translations.
+	 *
+	 * @since 0.5
 	 *
 	 * @return int[][]
 	 */

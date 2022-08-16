@@ -11,11 +11,15 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Handles the languages creation.
+ *
+ * @since 0.5
  */
 class Languages extends AbstractAction {
 
 	/**
 	 * Returns the action name.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string
 	 */
@@ -26,6 +30,8 @@ class Languages extends AbstractAction {
 	/**
 	 * Returns the processing message.
 	 *
+	 * @since 0.5
+	 *
 	 * @return string
 	 */
 	protected function getMessage() {
@@ -34,6 +40,8 @@ class Languages extends AbstractAction {
 
 	/**
 	 * Creates the languages.
+	 *
+	 * @since 0.5
 	 *
 	 * @return void
 	 */
@@ -59,6 +67,8 @@ class Languages extends AbstractAction {
 
 	/**
 	 * Deletes the language and translation group of the default category to avoid a conflict later.
+	 *
+	 * @since 0.5
 	 *
 	 * @return void
 	 */
@@ -88,6 +98,8 @@ class Languages extends AbstractAction {
 	/**
 	 * Gets the list of WPML languages from the database.
 	 *
+	 * @since 0.5
+	 *
 	 * @return string[][] {
 	 *   An array of languages.
 	 *
@@ -110,6 +122,8 @@ class Languages extends AbstractAction {
 
 	/**
 	 * Mimics how WPML orders the languages.
+	 *
+	 * @since 0.5
 	 *
 	 * @see SitePress::order_languages().
 	 *

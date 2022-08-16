@@ -11,11 +11,15 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Handles the strings translations.
+ *
+ * @since 0.5
  */
 class Strings extends AbstractSteppable {
 
 	/**
 	 * Returns the action name.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string
 	 */
@@ -26,6 +30,8 @@ class Strings extends AbstractSteppable {
 	/**
 	 * Returns the processing message.
 	 *
+	 * @since 0.5
+	 *
 	 * @return string
 	 */
 	protected function getMessage() {
@@ -34,6 +40,8 @@ class Strings extends AbstractSteppable {
 
 	/**
 	 * Processes the strings translations.
+	 *
+	 * @since 0.5
 	 *
 	 * @return void
 	 */
@@ -65,6 +73,8 @@ class Strings extends AbstractSteppable {
 	/**
 	 * Returns the number of WPML strings translations.
 	 *
+	 * @since 0.5
+	 *
 	 * @return int
 	 */
 	protected function getTotal() {
@@ -83,6 +93,8 @@ class Strings extends AbstractSteppable {
 
 	/**
 	 * Gets the WPML Strings translations.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string[][][]
 	 */
@@ -123,6 +135,8 @@ class Strings extends AbstractSteppable {
 
 	/**
 	 * Returns mo files text domains stored by WPML.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string[]
 	 */

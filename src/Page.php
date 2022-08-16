@@ -11,11 +11,15 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Main plugin class.
+ *
+ * @since 0.5
  */
 class Page {
 
 	/**
 	 * Action to execute first.
+	 *
+	 * @since 0.5
 	 *
 	 * @var string
 	 */
@@ -23,6 +27,8 @@ class Page {
 
 	/**
 	 * Constructor.
+	 *
+	 * @since 0.5
 	 *
 	 * @param string $action Action to execute first.
 	 */
@@ -33,6 +39,8 @@ class Page {
 	/**
 	 * Setups hooks.
 	 *
+	 * @since 0.5
+	 *
 	 * @return void
 	 */
 	public function addHooks() {
@@ -42,6 +50,8 @@ class Page {
 
 	/**
 	 * Adds the link to the languages panel in the WordPress admin menu.
+	 *
+	 * @since 0.5
 	 *
 	 * @return void
 	 */
@@ -61,6 +71,8 @@ class Page {
 	/**
 	 * Enqueues scripts.
 	 *
+	 * @since 0.5
+	 *
 	 * @return void
 	 */
 	public function addScripts() {
@@ -74,6 +86,8 @@ class Page {
 
 	/**
 	 * Displays the page.
+	 *
+	 * @since 0.5
 	 *
 	 * @return void
 	 */
@@ -99,6 +113,8 @@ class Page {
 	/**
 	 * Displays the form.
 	 *
+	 * @since 0.5
+	 *
 	 * @return void
 	 */
 	protected function displayForm() {
@@ -118,6 +134,8 @@ class Page {
 	/**
 	 * Displays error notices.
 	 *
+	 * @since 0.5
+	 *
 	 * @param string $error Error message.
 	 * @return void
 	 */
@@ -133,6 +151,8 @@ class Page {
 
 	/**
 	 * Performs checks before the import is run.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string[]
 	 */

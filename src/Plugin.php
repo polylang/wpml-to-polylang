@@ -11,10 +11,14 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Main plugin class.
+ *
+ * @since 0.5
  */
 class Plugin {
 	/**
 	 * Uses PLL_Admin_Model to be able to create languages.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string
 	 */
@@ -24,6 +28,8 @@ class Plugin {
 
 	/**
 	 * Initializes the plugin.
+	 *
+	 * @since 0.5
 	 *
 	 * @return void
 	 */

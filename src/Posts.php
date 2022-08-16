@@ -11,11 +11,15 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Handles the translations of posts.
+ *
+ * @since 0.5
  */
 class Posts extends AbstractObjects {
 
 	/**
 	 * Returns the action name.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string
 	 */
@@ -26,6 +30,8 @@ class Posts extends AbstractObjects {
 	/**
 	 * Returns the processing message.
 	 *
+	 * @since 0.5
+	 *
 	 * @return string
 	 */
 	protected function getMessage() {
@@ -34,6 +40,8 @@ class Posts extends AbstractObjects {
 
 	/**
 	 * Gets the languages term taxonomy ids related to this object type.
+	 *
+	 * @since 0.5
 	 *
 	 * @return int[]
 	 */
@@ -49,6 +57,8 @@ class Posts extends AbstractObjects {
 
 	/**
 	 * Returns the number of WPML term translations.
+	 *
+	 * @since 0.5
 	 *
 	 * @return int
 	 */
@@ -68,6 +78,8 @@ class Posts extends AbstractObjects {
 	/**
 	 * Returns the translation taxonomy name.
 	 *
+	 * @since 0.5
+	 *
 	 * @return string
 	 */
 	protected function getTranslationTaxonomy() {
@@ -76,6 +88,8 @@ class Posts extends AbstractObjects {
 
 	/**
 	 * Gets the WPML term translation ids.
+	 *
+	 * @since 0.5
 	 *
 	 * @return int[]
 	 */
@@ -99,6 +113,8 @@ class Posts extends AbstractObjects {
 
 	/**
 	 * Gets the WPML term translations.
+	 *
+	 * @since 0.5
 	 *
 	 * @param int[] $trids WPML translation ids.
 	 * @return int[][]
@@ -127,6 +143,8 @@ class Posts extends AbstractObjects {
 
 	/**
 	 * Gets the translated post types.
+	 *
+	 * @since 0.5
 	 *
 	 * @return string[]
 	 */

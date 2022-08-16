@@ -11,11 +11,15 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract class to handle the translations of objects, typically posts or terms.
+ *
+ * @since 0.5
  */
 abstract class AbstractObjects extends AbstractSteppable {
 
 	/**
 	 * Gets the languages term taxonomy ids related to this object type.
+	 *
+	 * @since 0.5
 	 *
 	 * @return int[]
 	 */
@@ -24,12 +28,16 @@ abstract class AbstractObjects extends AbstractSteppable {
 	/**
 	 * Returns the translation taxonomy name.
 	 *
+	 * @since 0.5
+	 *
 	 * @return string
 	 */
 	abstract protected function getTranslationTaxonomy();
 
 	/**
 	 * Gets the WPML term translation ids.
+	 *
+	 * @since 0.5
 	 *
 	 * @return int[]
 	 */
@@ -38,6 +46,8 @@ abstract class AbstractObjects extends AbstractSteppable {
 	/**
 	 * Gets the WPML term translations.
 	 *
+	 * @since 0.5
+	 *
 	 * @param int[] $trids WPML translation ids.
 	 * @return int[][]
 	 */
@@ -45,6 +55,8 @@ abstract class AbstractObjects extends AbstractSteppable {
 
 	/**
 	 * Processes the translations of this object type.
+	 *
+	 * @since 0.5
 	 *
 	 * @return void
 	 */
@@ -59,6 +71,8 @@ abstract class AbstractObjects extends AbstractSteppable {
 
 	/**
 	 * Creates the relationship between the terms and languages.
+	 *
+	 * @since 0.5
 	 *
 	 * @param int[][] $translations WPML translations.
 	 * @return void
@@ -91,6 +105,8 @@ abstract class AbstractObjects extends AbstractSteppable {
 
 	/**
 	 * Creates translation groups.
+	 *
+	 * @since 0.5
 	 *
 	 * @param int[][] $translations WPML translations.
 	 * @return void
