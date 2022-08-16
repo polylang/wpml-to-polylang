@@ -9,8 +9,6 @@ namespace WP_Syntex\WPML_To_Polylang;
 
 defined( 'ABSPATH' ) || exit;
 
-use WP_Error;
-
 /**
  * Main plugin class.
  */
