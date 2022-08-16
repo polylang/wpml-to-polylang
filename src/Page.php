@@ -120,14 +120,14 @@ class Page {
 	/**
 	 * Displays error notices.
 	 *
-	 * @param WP_Error $error WP_Error object.
+	 * @param string $error Error message.
 	 * @return void
 	 */
 	protected function displayNotice( $error ) {
 		?>
 		<div class="notice notice-error">
 			<p>
-				<?php echo esc_html( $error->get_error_message() ); ?>
+				<?php echo esc_html( $error ); ?>
 			</p>
 		</div>
 		<?php
@@ -136,7 +136,7 @@ class Page {
 	/**
 	 * Performs checks before the import is run.
 	 *
-	 * @return WP_Error[]
+	 * @return string[]
 	 */
 	protected function getErrors() {
 		global $sitepress, $wp_version;
@@ -144,45 +144,27 @@ class Page {
 		$checks = [];
 
 		if ( false === get_option( 'icl_sitepress_settings' ) ) {
-			$checks[] = new WP_Error(
-				'wpml_to_polylang_error',
-				__( 'WPML is not installed on this website.', 'wpml-to-polylang' )
-			);
+			$checks[] = __( 'WPML is not installed on this website.', 'wpml-to-polylang' );
 			return $checks;
 		}
 
 		if ( version_compare( $wp_version, WPML_TO_POLYLANG_MIN_WP_VERSION, '<' ) ) {
-			$checks[] = new WP_Error(
-				'wpml_to_polylang_error',
-				__( 'Your version of WordPress is too old. Please update.', 'wpml-to-polylang' )
-			);
+			$checks[] = __( 'Your version of WordPress is too old. Please update.', 'wpml-to-polylang' );
 		}
 
 		if ( ! empty( $sitepress ) ) {
-			$checks[] = new WP_Error(
-				'wpml_to_polylang_error',
-				__( 'WPML is activated. Please deactivate it.', 'wpml-to-polylang' )
-			);
+			$checks[] = __( 'WPML is activated. Please deactivate it.', 'wpml-to-polylang' );
 		}
 
 		if ( ! defined( 'POLYLANG_VERSION' ) ) {
-			$checks[] = new WP_Error(
-				'wpml_to_polylang_error',
-				__( 'Please install and activate Polylang to run the import.', 'wpml-to-polylang' )
-			);
+			$checks[] = __( 'Please install and activate Polylang to run the import.', 'wpml-to-polylang' );
 		} else {
 			if ( version_compare( POLYLANG_VERSION, WPML_TO_POLYLANG_MIN_PLL_VERSION, '<' ) ) {
-				$checks[] = new WP_Error(
-					'wpml_to_polylang_error',
-					__( 'Your version of Polylang is too old. Please update.', 'wpml-to-polylang' )
-				);
+				$checks[] = __( 'Your version of Polylang is too old. Please update.', 'wpml-to-polylang' );
 			}
 
 			if ( PLL()->model->get_languages_list() ) {
-				$checks[] = new WP_Error(
-					'wpml_to_polylang_error',
-					__( 'Polylang has already been installed on this website. Impossible to run the import.', 'wpml-to-polylang' )
-				);
+				$checks[] = __( 'Polylang has already been installed on this website. Impossible to run the import.', 'wpml-to-polylang' );
 			}
 		}
 
