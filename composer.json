@@ -5,6 +5,7 @@
 	"homepage": "https://polylang.pro",
 	"type": "wordpress-plugin",
 	"minimum-stability": "dev",
+	"prefer-stable": true,
 	"require": {
 		"php": ">=5.6"
 	},
