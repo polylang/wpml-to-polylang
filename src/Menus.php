@@ -111,7 +111,9 @@ class Menus extends AbstractAction {
 		$translations = [];
 
 		foreach ( $results as $mt ) {
-			$translations[ $mt->trid ][ $mt->language_code ] = (int) $mt->id;
+			if ( ! empty( $mt->trid ) && ! empty( $mt->language_code ) && ! empty( $mt->id ) ) {
+				$translations[ $mt->trid ][ $mt->language_code ] = (int) $mt->id;
+			}
 		}
 
 		return $translations;
