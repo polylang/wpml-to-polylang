@@ -118,5 +118,8 @@ class Options extends AbstractAction {
 
 		// Default category in default language.
 		update_option( 'default_category', (int) $wpml_settings['default_categories'][ $wpml_settings['default_language'] ] );
+
+		// And finally flush rewrite rules as WPML doesn't use them but we do.
+		flush_rewrite_rules();
 	}
 }
