@@ -26,19 +26,17 @@ Although WPML data should not be corrupted, as Polylang data are created without
 = How to proceed? =
 
 * De-activate WPML
-* Activate [Polylang](https://polylang.pro) and WPML to Polylang. Do **not** create any language with Polylang (they will be imported).
+* Activate Polylang or [Polylang Pro](https://polylang.pro) and WPML to Polylang. Do **not** create any language with Polylang (they will be imported).
 * Go to Tools -> WPML Importer.
-* If all checks are passed, you can click on 'Import'.
+* If all checks are passed, then you can click on 'Import'.
 * De-activate WPML to Polylang (You can even delete it).
 * Setup a language switcher either as a widget or in nav menus.
 * Check that everything is OK.
-* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in the Plugins table. If you want to delete all data created for Polylang, Please read [how](https://polylang.pro/doc/how-to-uninstall-polylang/) **before** deleting Polylang. Finally you can re-activate WPML.
+* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in the Plugins table. To delete all data created for Polylang, Please read [how](https://polylang.pro/doc/how-to-uninstall-polylang/) **before** deleting Polylang. Finally you can re-activate WPML.
 
 = Notes =
 
 This plugin does not include error management. It has however been tested successfully to migrate a site with about 9,000 posts and media.
-As everything is processed in one unique step, big sites may require to tweak the PHP memory limit and MySQL buffer size.
-It has been tested with WPML 4.4.8. It has also tested on multisite.
 
 = Credits =
 

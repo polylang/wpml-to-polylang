@@ -4,37 +4,33 @@
 	"license": "GPL-3.0-or-later",
 	"homepage": "https://polylang.pro",
 	"type": "wordpress-plugin",
+	"minimum-stability": "dev",
+	"prefer-stable": true,
 	"require": {
 		"php": ">=5.6"
 	},
 	"require-dev": {
-		"dealerdirect/phpcodesniffer-composer-installer": "*",
-		"wp-coding-standards/wpcs": "*",
-		"automattic/vipwpcs": "*",
-		"phpcompatibility/phpcompatibility-wp": "*",
-		"szepeviktor/phpstan-wordpress": "*",
-		"phpstan/phpstan": "<1.7",
+		"wpsyntex/polylang-cs": "dev-main",
 		"wpsyntex/polylang-phpstan": "^1.0",
 		"wpsyntex/polylang-stubs": "dev-master"
 	},
+	"autoload": {
+		"psr-4": {
+			"WP_Syntex\\WPML_To_Polylang\\": "src/"
+		}
+	},
 	"scripts": {
-		"test":"vendor/bin/phpunit",
 		"cs":"vendor/bin/phpcs",
 		"stan": "vendor/bin/phpstan analyze --memory-limit=400M",
 		"lint": [
 			"@cs",
 			"@stan"
-		],
-		"build": "bin/build.sh",
-		"dist": "bin/distribute.sh"
+		]
 	},
 	"scripts-descriptions": {
-		"test":"Runs PHPUnit tests.",
 		"cs":"Runs PHPCS linter.",
 		"stan": "Runs PHPStan analysis.",
-		"lint": "Runs both PHPCS and PHPStan.",
-		"build": "Builds the project.",
-		"dist": "Make the zip file to distibute the project release."
+		"lint": "Runs both PHPCS and PHPStan."
 	},
 	"config": {
 		"allow-plugins": {
