@@ -3,8 +3,8 @@ Contributors: Chouby
 Donate link: https://polylang.pro
 Tags: Polylang, WPML, importer, multilingual, bilingual
 Requires at least: 4.9
-Tested up to: 5.8
-Stable tag: 0.4
+Tested up to: 6.1
+Stable tag: 0.5
 License: GPLv3 or later
 
 Import multilingual data from WPML into Polylang.
@@ -43,6 +43,14 @@ This plugin does not include error management. It has however been tested succes
 The banner and icon were designed by [Alex Lopez](http://www.alexlopez.rocks/)
 
 == Changelog ==
+
+= 0.5 (2022-12-05) =
+
+* Complete rewrite to avoid issues with PHP memory limit and MySQL buffer size. Props Jeremy Simkins for lot of ideas. #19
+* Simplify the UI and attempt to clarify error messages.
+* Fix languages order not imported.
+* Fix media translation setting not imported.
+* Fix nav menu locations per language.
 
 = 0.4 (2021-01-19) =
 

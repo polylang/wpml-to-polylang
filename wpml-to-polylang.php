@@ -12,7 +12,7 @@
  * Plugin name:          WPML to Polylang
  * Plugin URI:           https://polylang.pro
  * Description:          Import multilingual data from WPML into Polylang
- * Version:              0.5-dev
+ * Version:              0.5
  * Requires at least:    4.9
  * Requires PHP:         5.6
  * Author:               WP SYNTEX
@@ -43,7 +43,7 @@ namespace WP_Syntex\WPML_To_Polylang;
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'WPML_TO_POLYLANG_VERSION', '0.5-dev' );
+define( 'WPML_TO_POLYLANG_VERSION', '0.5' );
 define( 'WPML_TO_POLYLANG_MIN_WP_VERSION', '4.9' );
 define( 'WPML_TO_POLYLANG_MIN_PLL_VERSION', '2.8' );
 
