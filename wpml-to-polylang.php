@@ -44,8 +44,8 @@ namespace WP_Syntex\WPML_To_Polylang;
 defined( 'ABSPATH' ) || exit;
 
 define( 'WPML_TO_POLYLANG_VERSION', '0.5' );
-define( 'WPML_TO_POLYLANG_MIN_WP_VERSION', '4.9' );
-define( 'WPML_TO_POLYLANG_MIN_PLL_VERSION', '2.8' );
+define( 'WPML_TO_POLYLANG_MIN_WP_VERSION', '5.8' );
+define( 'WPML_TO_POLYLANG_MIN_PLL_VERSION', '3.4' );
 
 if ( ! defined( 'WPML_TO_POLYLANG_QUERY_BATCH_SIZE' ) ) {
 	define( 'WPML_TO_POLYLANG_QUERY_BATCH_SIZE', 5000 ); // Limits the size of database queries.
