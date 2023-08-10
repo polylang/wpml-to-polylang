@@ -49,24 +49,6 @@ class NoLangObjects extends AbstractAction {
 	 * @return void
 	 */
 	protected function handle() {
-		$wpml_settings = get_option( 'icl_sitepress_settings' );
-
-		if ( ! is_array( $wpml_settings ) ) {
-			return; // Something's wrong.
-		}
-
-		$nolang = PLL()->model->get_objects_with_no_lang( WPML_TO_POLYLANG_QUERY_BATCH_SIZE );
-
-		while ( $nolang ) {
-			if ( ! empty( $nolang['posts'] ) ) {
-				PLL()->model->set_language_in_mass( 'post', $nolang['posts'], $wpml_settings['default_language'] );
-			}
-
-			if ( ! empty( $nolang['terms'] ) ) {
-				PLL()->model->set_language_in_mass( 'term', $nolang['terms'], $wpml_settings['default_language'] );
-			}
-
-			$nolang = PLL()->model->get_objects_with_no_lang( WPML_TO_POLYLANG_QUERY_BATCH_SIZE );
-		}
+		PLL()->model->set_language_in_mass();
 	}
 }
