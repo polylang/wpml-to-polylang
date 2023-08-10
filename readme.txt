@@ -2,9 +2,9 @@
 Contributors: Chouby
 Donate link: https://polylang.pro
 Tags: Polylang, WPML, importer, multilingual, bilingual
-Requires at least: 4.9
-Tested up to: 6.1
-Stable tag: 0.5
+Requires at least: 5.8
+Tested up to: 6.3
+Stable tag: 0.6
 License: GPLv3 or later
 
 Import multilingual data from WPML into Polylang.
@@ -43,6 +43,12 @@ This plugin does not include error management. It has however been tested succes
 The banner and icon were designed by [Alex Lopez](http://www.alexlopez.rocks/)
 
 == Changelog ==
+
+= 0.6 (2023-08-10) =
+
+* Min Polylang version is now 3.4
+* Fix deprecated notices with Polylang 3.4
+* Fix infinite loop when processing objects without language with Polylang 3.4
 
 = 0.5 (2022-12-05) =
 

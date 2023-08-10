@@ -12,8 +12,8 @@
  * Plugin name:          WPML to Polylang
  * Plugin URI:           https://polylang.pro
  * Description:          Import multilingual data from WPML into Polylang
- * Version:              0.5
- * Requires at least:    4.9
+ * Version:              0.6
+ * Requires at least:    5.8
  * Requires PHP:         5.6
  * Author:               WP SYNTEX
  * Author URI:           https://polylang.pro
@@ -23,7 +23,7 @@
  * License URI:          https://www.gnu.org/licenses/gpl-3.0.txt
  *
  * Copyright 2013-2020 Frédéric Demarle
- * Copyright 2021-2022 WP SYNTEX
+ * Copyright 2021-2023 WP SYNTEX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ namespace WP_Syntex\WPML_To_Polylang;
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'WPML_TO_POLYLANG_VERSION', '0.5' );
+define( 'WPML_TO_POLYLANG_VERSION', '0.6' );
 define( 'WPML_TO_POLYLANG_MIN_WP_VERSION', '5.8' );
 define( 'WPML_TO_POLYLANG_MIN_PLL_VERSION', '3.4' );
 
