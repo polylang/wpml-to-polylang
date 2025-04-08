@@ -158,6 +158,7 @@ class Posts extends AbstractObjects {
 			$icl_types = array_keys( $settings['custom_posts_sync_option'] );
 			$icl_types = array_filter( $icl_types, 'is_string' );
 			$types     = array_merge( $types, $icl_types );
+			$types     = array_unique( $types );
 		}
 
 		$types = array_diff( $types, [ 'wp_template' ] );

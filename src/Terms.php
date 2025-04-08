@@ -167,6 +167,7 @@ class Terms extends AbstractObjects {
 			$icl_taxonomies = array_keys( $settings['taxonomies_sync_option'] );
 			$icl_taxonomies = array_filter( $icl_taxonomies, 'is_string' );
 			$taxonomies     = array_merge( $taxonomies, $icl_taxonomies );
+			$taxonomies     = array_unique( $taxonomies );
 		}
 
 		$taxonomies = array_diff( $taxonomies, [ 'wp_theme', 'wp_template_part_area' ] );
