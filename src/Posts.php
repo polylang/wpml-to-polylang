@@ -154,10 +154,11 @@ class Posts extends AbstractObjects {
 		$types    = [ 'post', 'page', 'wp_block' ];
 		$settings = get_option( 'icl_sitepress_settings' );
 
-		if ( is_array( $settings ) && is_array( $settings['taxonomies_sync_option'] ) ) {
+		if ( is_array( $settings ) && is_array( $settings['custom_posts_sync_option'] ) ) {
 			$icl_types = array_keys( $settings['custom_posts_sync_option'] );
 			$icl_types = array_filter( $icl_types, 'is_string' );
 			$types     = array_merge( $types, $icl_types );
+			$types     = array_unique( $types );
 		}
 
 		$types = array_diff( $types, [ 'wp_template' ] );
