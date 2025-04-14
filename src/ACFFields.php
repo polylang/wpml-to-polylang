@@ -78,10 +78,10 @@ class ACFFields extends AbstractSteppable {
 				FROM {$wpdb->posts}
 				WHERE post_type = 'acf-field' AND post_content LIKE %s
 				ORDER BY ID ASC
-				LIMIT %d, %d",
+				LIMIT %d OFFSET %d",
 				'%"' . $wpdb->esc_like( self::ACFML_KEY ) . '"%',
-				$offset,
-				$this->batch_size
+				$this->batch_size,
+				$offset
 			)
 		);
 
