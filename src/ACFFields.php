@@ -24,6 +24,22 @@ class ACFFields extends AbstractSteppable {
 	];
 
 	/**
+	 * Batch size.
+	 *
+	 * @var int
+	 */
+	protected $batch_size;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since 0.6
+	 */
+	public function __construct() {
+		$this->batch_size = absint( WPML_TO_POLYLANG_QUERY_BATCH_SIZE / 100 ); // 50 by default, to limit the size of the UPDATE query.
+	}
+
+	/**
 	 * Returns the action name.
 	 *
 	 * @since 0.6
@@ -55,9 +71,8 @@ class ACFFields extends AbstractSteppable {
 	protected function handle() {
 		global $wpdb;
 
-		$batch_size = absint( WPML_TO_POLYLANG_QUERY_BATCH_SIZE / 100 ); // 50 by default, to limit the size of the UPDATE query.
-		$offset     = absint( ( $this->step * $batch_size ) - $batch_size );
-		$results    = $wpdb->get_results(
+		$offset  = absint( ( $this->step * $this->batch_size ) - $this->batch_size );
+		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT ID, post_content
 				FROM {$wpdb->posts}
@@ -66,7 +81,7 @@ class ACFFields extends AbstractSteppable {
 				LIMIT %d, %d",
 				'%"' . $wpdb->esc_like( self::ACFML_KEY ) . '"%',
 				$offset,
-				$batch_size
+				$this->batch_size
 			)
 		);
 
