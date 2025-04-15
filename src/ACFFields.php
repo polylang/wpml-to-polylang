@@ -94,7 +94,7 @@ class ACFFields extends AbstractSteppable {
 				continue;
 			}
 
-			$values[ $field->ID ] = sprintf( "WHEN %d THEN '%s'", $field->ID, addcslashes( esc_sql( $post_content ), "'" ) );
+			$values[ $field->ID ] = [ $field->ID, $post_content ];
 		} // End foreach.
 
 		if ( empty( $values ) ) {
@@ -103,15 +103,13 @@ class ACFFields extends AbstractSteppable {
 
 		// Update the whole batch in one query.
 		$wpdb->query(
-			sprintf(
-				"UPDATE {$wpdb->posts}
-				SET post_content = CASE ID
-					%s
-					ELSE post_content
-				END
-				WHERE ID IN (%s)",
-				implode( "\n", $values ), // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				implode( "\n", array_keys( $values ) ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->prepare(
+				sprintf(
+					"UPDATE {$wpdb->posts} SET post_content = (CASE ID %s ELSE post_content END) WHERE ID IN (%s)",
+					implode( ' ', array_fill( 0, count( $values ), 'WHEN %d THEN %s' ) ),
+					implode( ',', array_fill( 0, count( $values ), '%d' ) )
+				),
+				array_merge( array_merge( ...$values ), array_keys( $values ) )
 			)
 		);
 	}
