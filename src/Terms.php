@@ -99,7 +99,9 @@ class Terms extends AbstractObjects {
 	protected function getWPMLTranslationIds() {
 		global $wpdb;
 
-		$trids = $wpdb->get_col(
+		$batch_size = $this->getBatchSyze();
+		$offset     = absint( ( $this->step * $batch_size ) - $batch_size );
+		$trids      = $wpdb->get_col(
 			sprintf(
 				"SELECT DISTINCT wpml.trid
 				FROM {$wpdb->term_taxonomy} AS tt
@@ -109,8 +111,8 @@ class Terms extends AbstractObjects {
 				WHERE tt.taxonomy IN ( '%s' )
 				LIMIT %d, %d",
 				implode( "', '", esc_sql( $this->getTranslatedTaxonomies() ) ),
-				absint( $this->step * WPML_TO_POLYLANG_QUERY_BATCH_SIZE - WPML_TO_POLYLANG_QUERY_BATCH_SIZE ),
-				absint( WPML_TO_POLYLANG_QUERY_BATCH_SIZE )
+				$offset,
+				$batch_size
 			)
 		);
 

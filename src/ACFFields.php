@@ -24,22 +24,6 @@ class ACFFields extends AbstractSteppable {
 	];
 
 	/**
-	 * Batch size.
-	 *
-	 * @var int
-	 */
-	protected $batch_size;
-
-	/**
-	 * Constructor.
-	 *
-	 * @since 0.6
-	 */
-	public function __construct() {
-		$this->batch_size = absint( WPML_TO_POLYLANG_QUERY_BATCH_SIZE / 100 ); // 50 by default, to limit the size of the UPDATE query.
-	}
-
-	/**
 	 * Returns the action name.
 	 *
 	 * @since 0.6
@@ -71,8 +55,9 @@ class ACFFields extends AbstractSteppable {
 	protected function handle() {
 		global $wpdb;
 
-		$offset  = absint( ( $this->step * $this->batch_size ) - $this->batch_size );
-		$results = $wpdb->get_results(
+		$batch_size = $this->getBatchSyze();
+		$offset     = absint( ( $this->step * $batch_size ) - $batch_size );
+		$results    = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT ID, post_content
 				FROM {$wpdb->posts}
@@ -80,7 +65,7 @@ class ACFFields extends AbstractSteppable {
 				ORDER BY ID ASC
 				LIMIT %d OFFSET %d",
 				'%"' . $wpdb->esc_like( self::ACFML_KEY ) . '"%',
-				$this->batch_size,
+				$batch_size,
 				$offset
 			)
 		);
@@ -129,6 +114,17 @@ class ACFFields extends AbstractSteppable {
 				implode( "\n", array_keys( $values ) ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			)
 		);
+	}
+
+	/**
+	 * Returns the batch size.
+	 *
+	 * @since 0.6
+	 *
+	 * @return int A positive integer.
+	 */
+	protected function getBatchSyze() {
+		return absint( WPML_TO_POLYLANG_QUERY_BATCH_SIZE / 100 ); // 50 by default, to limit the size of the UPDATE query.
 	}
 
 	/**

@@ -26,6 +26,17 @@ abstract class AbstractSteppable extends AbstractAction {
 	abstract protected function getTotal();
 
 	/**
+	 * Returns the batch size.
+	 *
+	 * @since 0.6
+	 *
+	 * @return int A positive integer.
+	 */
+	protected function getBatchSyze() {
+		return WPML_TO_POLYLANG_QUERY_BATCH_SIZE;
+	}
+
+	/**
 	 * Returns the action completion percentage.
 	 *
 	 * @since 0.5
@@ -37,7 +48,7 @@ abstract class AbstractSteppable extends AbstractAction {
 		$total      = $this->getTotal();
 
 		if ( $total ) {
-			$percentage = ( $this->step * WPML_TO_POLYLANG_QUERY_BATCH_SIZE ) / $total * 100;
+			$percentage = ( $this->step * $this->getBatchSyze() ) / $total * 100;
 			$percentage = (int) ceil( $percentage );
 		}
 

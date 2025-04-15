@@ -101,7 +101,8 @@ class Strings extends AbstractSteppable {
 	protected function getWPMLStringsTranslations() {
 		global $wpdb;
 
-		$offset = ( $this->step * WPML_TO_POLYLANG_QUERY_BATCH_SIZE ) - WPML_TO_POLYLANG_QUERY_BATCH_SIZE;
+		$batch_size = $this->getBatchSyze();
+		$offset     = absint( ( $this->step * $batch_size ) - $batch_size );
 
 		/**
 		 * WPML string translations.
@@ -116,8 +117,8 @@ class Strings extends AbstractSteppable {
 				WHERE s.context NOT IN ( '%s' )
 				LIMIT %d, %d",
 				implode( "', '", esc_sql( $this->getDomains() ) ),
-				absint( $offset ),
-				absint( WPML_TO_POLYLANG_QUERY_BATCH_SIZE )
+				$offset,
+				$batch_size
 			)
 		);
 
