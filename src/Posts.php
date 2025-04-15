@@ -97,7 +97,7 @@ class Posts extends AbstractObjects {
 		global $wpdb;
 
 		$batch_size = $this->getBatchSyze();
-		$offset     = absint( ( $this->step * $batch_size ) - $batch_size );
+		$offset     = ( $this->step * $batch_size ) - $batch_size;
 		$trids      = $wpdb->get_col(
 			sprintf(
 				"SELECT DISTINCT trid
@@ -105,8 +105,8 @@ class Posts extends AbstractObjects {
 				WHERE SUBSTR( element_type, 6 ) IN ( '%s' )
 				LIMIT %d, %d",
 				implode( "', '", esc_sql( $this->getTranslatedPostTypes() ) ),
-				$offset,
-				$batch_size
+				absint( $offset ),
+				absint( $batch_size )
 			)
 		);
 

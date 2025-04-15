@@ -102,7 +102,7 @@ class Strings extends AbstractSteppable {
 		global $wpdb;
 
 		$batch_size = $this->getBatchSyze();
-		$offset     = absint( ( $this->step * $batch_size ) - $batch_size );
+		$offset     = ( $this->step * $batch_size ) - $batch_size;
 
 		/**
 		 * WPML string translations.
@@ -117,8 +117,8 @@ class Strings extends AbstractSteppable {
 				WHERE s.context NOT IN ( '%s' )
 				LIMIT %d, %d",
 				implode( "', '", esc_sql( $this->getDomains() ) ),
-				$offset,
-				$batch_size
+				absint( $offset ),
+				absint( $batch_size )
 			)
 		);
 

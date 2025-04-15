@@ -100,7 +100,7 @@ class Terms extends AbstractObjects {
 		global $wpdb;
 
 		$batch_size = $this->getBatchSyze();
-		$offset     = absint( ( $this->step * $batch_size ) - $batch_size );
+		$offset     = ( $this->step * $batch_size ) - $batch_size;
 		$trids      = $wpdb->get_col(
 			sprintf(
 				"SELECT DISTINCT wpml.trid
@@ -111,8 +111,8 @@ class Terms extends AbstractObjects {
 				WHERE tt.taxonomy IN ( '%s' )
 				LIMIT %d, %d",
 				implode( "', '", esc_sql( $this->getTranslatedTaxonomies() ) ),
-				$offset,
-				$batch_size
+				absint( $offset ),
+				absint( $batch_size )
 			)
 		);
 
