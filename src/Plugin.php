@@ -44,6 +44,7 @@ class Plugin {
 			new NoLangObjects(),
 			new Strings(),
 			new Options(),
+			new ACFFields(),
 		];
 
 		$nextAction = '';

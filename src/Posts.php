@@ -96,15 +96,17 @@ class Posts extends AbstractObjects {
 	protected function getWPMLTranslationIds() {
 		global $wpdb;
 
-		$trids = $wpdb->get_col(
+		$batch_size = $this->getBatchSyze();
+		$offset     = ( $this->step * $batch_size ) - $batch_size;
+		$trids      = $wpdb->get_col(
 			sprintf(
 				"SELECT DISTINCT trid
 				FROM {$wpdb->prefix}icl_translations
 				WHERE SUBSTR( element_type, 6 ) IN ( '%s' )
 				LIMIT %d, %d",
 				implode( "', '", esc_sql( $this->getTranslatedPostTypes() ) ),
-				absint( $this->step * WPML_TO_POLYLANG_QUERY_BATCH_SIZE - WPML_TO_POLYLANG_QUERY_BATCH_SIZE ),
-				absint( WPML_TO_POLYLANG_QUERY_BATCH_SIZE )
+				absint( $offset ),
+				absint( $batch_size )
 			)
 		);
 
