@@ -28,7 +28,7 @@ abstract class AbstractSteppable extends AbstractAction {
 	/**
 	 * Returns the batch size.
 	 *
-	 * @since 0.6
+	 * @since 0.7
 	 *
 	 * @return int A positive integer.
 	 */

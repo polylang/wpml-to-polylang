@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Handles the ACF fields.
  *
- * @since 0.6
+ * @since 0.7
  */
 class ACFFields extends AbstractSteppable {
 	const ACFML_KEY = 'wpml_cf_preferences';
@@ -26,7 +26,7 @@ class ACFFields extends AbstractSteppable {
 	/**
 	 * Returns the action name.
 	 *
-	 * @since 0.6
+	 * @since 0.7
 	 *
 	 * @return string
 	 */
@@ -37,7 +37,7 @@ class ACFFields extends AbstractSteppable {
 	/**
 	 * Returns the processing message.
 	 *
-	 * @since 0.6
+	 * @since 0.7
 	 *
 	 * @return string
 	 */
@@ -48,7 +48,7 @@ class ACFFields extends AbstractSteppable {
 	/**
 	 * Processes the ACF fields.
 	 *
-	 * @since 0.6
+	 * @since 0.7
 	 *
 	 * @return void
 	 */
@@ -117,7 +117,7 @@ class ACFFields extends AbstractSteppable {
 	/**
 	 * Returns the batch size.
 	 *
-	 * @since 0.6
+	 * @since 0.7
 	 *
 	 * @return int A positive integer.
 	 */
@@ -128,7 +128,7 @@ class ACFFields extends AbstractSteppable {
 	/**
 	 * Returns the number of ACF fields to update.
 	 *
-	 * @since 0.6
+	 * @since 0.7
 	 *
 	 * @return int
 	 */
