@@ -15,6 +15,16 @@ defined( 'ABSPATH' ) || exit;
  * @since 0.5
  */
 class Posts extends AbstractObjects {
+	/**
+	 * Returns the type of the object.
+	 *
+	 * @since 0.6
+	 *
+	 * @return string
+	 */
+	protected function getObjectType() {
+		return 'post';
+	}
 
 	/**
 	 * Returns the action name.

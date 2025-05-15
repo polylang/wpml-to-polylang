@@ -17,6 +17,15 @@ defined( 'ABSPATH' ) || exit;
  * @since 0.5
  */
 abstract class AbstractObjects extends AbstractSteppable {
+	/**
+	 * Returns the type of the object (post, term...).
+	 * Must match `PLL_Translatable_Object::get_type()`.
+	 *
+	 * @since 0.6
+	 *
+	 * @return string
+	 */
+	abstract protected function getObjectType();
 
 	/**
 	 * Gets the languages term taxonomy ids related to this object type.
@@ -114,14 +123,7 @@ abstract class AbstractObjects extends AbstractSteppable {
 	 * @return void
 	 */
 	protected function processTranslations( $translations ) {
-		$translated_object = false;
-
-		foreach ( PLL()->model->translatable_objects as $translatable_object ) {
-			if ( $translatable_object->get_tax_translations() === $this->getTranslationTaxonomy() ) {
-				$translated_object = $translatable_object;
-				break;
-			}
-		}
+		$translated_object = PLL()->model->translatable_objects->get( $this->getObjectType() );
 
 		if ( ! $translated_object instanceof PLL_Translated_Object ) {
 			// Uh?
