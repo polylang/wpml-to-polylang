@@ -21,7 +21,7 @@ abstract class AbstractObjects extends AbstractSteppable {
 	 * Returns the type of the object (post, term...).
 	 * Must match `PLL_Translatable_Object::get_type()`.
 	 *
-	 * @since 0.6
+	 * @since 0.7
 	 *
 	 * @return string
 	 */

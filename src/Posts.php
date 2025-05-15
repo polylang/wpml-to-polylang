@@ -18,7 +18,7 @@ class Posts extends AbstractObjects {
 	/**
 	 * Returns the type of the object.
 	 *
-	 * @since 0.6
+	 * @since 0.7
 	 *
 	 * @return string
 	 */
