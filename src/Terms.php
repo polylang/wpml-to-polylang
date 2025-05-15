@@ -147,7 +147,7 @@ class Terms extends AbstractObjects {
 		// Remove empty ids and group translations by translation group.
 		foreach ( $results as $t ) {
 			if ( ! empty( $t->trid ) && ! empty( $t->language_code ) && ! empty( $t->id ) ) {
-				$translations[ 'wpml_' . $t->trid ][ $t->language_code ] = (int) $t->id;
+				$translations[ 'pll_wpml_' . $t->trid ][ $t->language_code ] = (int) $t->id;
 			}
 		}
 
