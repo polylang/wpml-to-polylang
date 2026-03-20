@@ -53,7 +53,7 @@ class Strings extends AbstractSteppable {
 		}
 
 		foreach ( $stringTranslations as $lang => $strings ) {
-			$language = PLL()->model->get_language( $lang );
+			$language = PLL()->model->languages->get( $lang );
 
 			if ( empty( $language ) ) {
 				continue;

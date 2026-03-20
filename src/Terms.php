@@ -58,7 +58,7 @@ class Terms extends AbstractObjects {
 	protected function getLanguageTermTaxonomyIds() {
 		$languages = [];
 
-		foreach ( PLL()->model->get_languages_list() as $lang ) {
+		foreach ( PLL()->model->languages->get_list() as $lang ) {
 			$languages[ $lang->slug ] = $lang->get_tax_prop( 'term_language', 'term_taxonomy_id' );
 		}
 

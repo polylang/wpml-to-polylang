@@ -59,7 +59,7 @@ class Languages extends AbstractAction {
 			$lang['rtl']  = isset( $predefinedLanguages[ $lang['locale'] ]['dir'] ) && 'rtl' === $predefinedLanguages[ $lang['locale'] ]['dir'] ? 1 : 0;
 			$lang['flag'] = isset( $predefinedLanguages[ $lang['locale'] ]['flag'] ) ? $predefinedLanguages[ $lang['locale'] ]['flag'] : '';
 
-			PLL()->model->add_language( $lang );
+			PLL()->model->languages->add( $lang );
 		}
 
 		$this->cleanup();

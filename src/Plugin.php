@@ -16,17 +16,6 @@ defined( 'ABSPATH' ) || exit;
  */
 class Plugin {
 	/**
-	 * Uses PLL_Admin_Model to be able to create languages.
-	 *
-	 * @since 0.5
-	 *
-	 * @return string
-	 */
-	public function filterModel() {
-		return 'PLL_Admin_Model';
-	}
-
-	/**
 	 * Initializes the plugin.
 	 *
 	 * @since 0.5
@@ -34,8 +23,6 @@ class Plugin {
 	 * @return void
 	 */
 	public function init() {
-		add_filter( 'pll_model', [ $this, 'filterModel' ] );
-
 		$actions = [
 			new Languages(),
 			new Posts(),
