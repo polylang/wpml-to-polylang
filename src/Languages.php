@@ -92,7 +92,7 @@ class Languages extends AbstractAction {
 			wp_delete_object_term_relationships( (int) $defaultCat, 'term_language' );
 		}
 
-		PLL()->model->clean_languages_cache(); // Update the languages list.
+		PLL()->model->languages->clean_cache(); // Update the languages list.
 	}
 
 	/**
