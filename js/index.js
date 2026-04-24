@@ -1,78 +1,65 @@
-jQuery(
-	function( $ ) {
-		/**
-		 * Batch processing to migrate WPML data to Polylang.
-		 */
-		window.WPMLToPolylang = {
-			/**
-			 * Disables the submit button and fires the batch process.
-			 */
-			init: function() {
-				const self = this;
+jQuery( function ( $ ) {
+	/**
+	 * WPML → Polylang migration toolkit.
+	 *
+	 * Each form on the page is independent: it has its own submit button and its
+	 * own status div (identified by the form's data-tool attribute).
+	 */
 
-				$( 'form' ).on(
-					'submit',
-					function( event ) {
-						event.preventDefault();
+	$( '.wpml-pll-form' ).each( function () {
+		var form   = $( this );
+		var toolId = form.data( 'tool' );
+		var status = $( '#wpml-status-' + toolId );
+		var btn    = form.find( 'button[type="submit"]' );
 
-						const form   = $( this );
-						const data   = self.formToArray( form );
-						const submit = form.find( 'input[type="submit"]' );
+		form.on( 'submit', function ( e ) {
+			e.preventDefault();
 
-						submit.attr( 'disabled', true );
-						self.process( data, self );
-					}
-				);
+			btn.prop( 'disabled', true ).text( btn.text().trim() );
+			status.removeClass( 'is-done' ).text( '' );
+
+			var data = serialiseForm( form );
+			sendRequest( data, status, btn );
+		} );
+	} );
+
+	function serialiseForm( form ) {
+		var out = {};
+		$.each( form.serializeArray(), function ( _, field ) {
+			out[ field.name ] = field.value;
+		} );
+		return out;
+	}
+
+	function sendRequest( data, status, btn ) {
+		$.post( {
+			url:      ajaxurl,
+			data:     data,
+			dataType: 'json',
+			success: function ( response ) {
+				handleResponse( response, data, status, btn );
 			},
-
-			/**
-			 * Transforms submitted form in a convenient array of data.
-			 */
-			formToArray: function( form ) {
-				var ret = {};
-
-				form = form.serializeArray();
-				for ( i = 0; i < form.length; i++ ) {
-					ret[ form[i].name ] = form[i].value;
-				}
-
-				return ret;
-			},
-
-			/**
-			 * Sends the ajax request.
-			 */
-			process: function( data, self ) {
-				$.post(
-					{
-						url: ajaxurl,
-						data: data,
-						dataType: 'json',
-						success: function ( response ) {
-							self.success( response, data, self );
-						}
-					}
-				);
-			},
-
-			/**
-			 * Processes the ajax response.
-			 */
-			success: function( response, data, self ) {
-				$( '#wpml-importer-status' ).text( response.message );
-
-				if ( ! response.done ) {
-					data['action'] = response.action;
-					data['step']   = response.step;
-					self.process( data, self );
-				}
+			error: function () {
+				status.text( 'An unexpected error occurred. Please try again.' );
+				btn.prop( 'disabled', false );
 			}
-		}
+		} );
 	}
-);
 
-jQuery(
-	function( $ ) {
-		window.WPMLToPolylang && window.WPMLToPolylang.init();
+	function handleResponse( response, data, status, btn ) {
+		if ( response.done ) {
+			status.addClass( 'is-done' ).text( 'Done!' );
+			btn.prop( 'disabled', false );
+			return;
+		}
+
+		if ( response.message ) {
+			status.text( response.message );
+		}
+
+		// Chain to the next step.
+		data['action'] = response.action;
+		data['step']   = response.step;
+		sendRequest( data, status, btn );
 	}
-);
+} );
