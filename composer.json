@@ -21,7 +21,7 @@
 	},
 	"scripts": {
 		"cs":"vendor/bin/phpcs",
-		"stan": "vendor/bin/phpstan analyze --memory-limit=400M",
+		"stan": "vendor/bin/phpstan analyze --memory-limit=1000M",
 		"lint": [
 			"@cs",
 			"@stan"
