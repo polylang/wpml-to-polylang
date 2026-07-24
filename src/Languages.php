@@ -46,7 +46,7 @@ class Languages extends AbstractAction {
 	 * @return void
 	 */
 	protected function handle() {
-		$predefinedLanguages = include POLYLANG_DIR . '/settings/languages.php';
+		$predefinedLanguages = include POLYLANG_DIR . '/src/settings/languages.php';
 
 		$wpmlLanguages = $this->getWPMLLanguages();
 		$wpmlLanguages = $this->orderLanguages( $wpmlLanguages );
