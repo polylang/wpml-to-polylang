@@ -61,38 +61,6 @@ class Languages extends AbstractAction {
 
 			PLL()->model->languages->add( $lang );
 		}
-
-		$this->cleanup();
-	}
-
-	/**
-	 * Deletes the language and translation group of the default category to avoid a conflict later.
-	 *
-	 * @since 0.5
-	 *
-	 * @return void
-	 */
-	protected function cleanup() {
-		$termIds = get_terms(
-			[
-				'taxonomy'   => 'term_translations',
-				'hide_empty' => false,
-				'fields'     => 'ids',
-			]
-		);
-
-		if ( is_array( $termIds ) ) {
-			foreach ( $termIds as $termId ) {
-				wp_delete_term( $termId, 'term_translations' );
-			}
-		}
-
-		$defaultCat = get_option( 'default_category' );
-		if ( is_numeric( $defaultCat ) ) {
-			wp_delete_object_term_relationships( (int) $defaultCat, 'term_language' );
-		}
-
-		PLL()->model->languages->clean_cache(); // Update the languages list.
 	}
 
 	/**
