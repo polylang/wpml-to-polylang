@@ -1,8 +1,11 @@
 # Files to ignore when downloading a zip
 
 .gitattributes export-ignore
+.github/ export-ignore
 .gitignore export-ignore
 composer.json export-ignore
 composer.lock export-ignore
+consistent-versions-tag.yaml export-ignore
+consistent-versions.yaml export-ignore
 phpcs.xml.dist export-ignore
 phpstan.neon.dist export-ignore

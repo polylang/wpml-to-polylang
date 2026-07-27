@@ -2,8 +2,6 @@
 /**
  * WPML to Polylang
  *
- * PHP version 5.6
- *
  * @package              wpml-to-polylang
  * @author               WP SYNTEX
  * @license              GPL-3.0-or-later
@@ -13,7 +11,7 @@
  * Plugin URI:           https://polylang.pro
  * Description:          Import multilingual data from WPML into Polylang
  * Version:              0.6
- * Requires at least:    5.8
+ * Requires at least:    6.5
  * Requires PHP:         7.4
  * Author:               WP SYNTEX
  * Author URI:           https://polylang.pro

@@ -2,8 +2,9 @@
 Contributors: Chouby
 Donate link: https://polylang.pro
 Tags: Polylang, WPML, importer, multilingual, bilingual
-Requires at least: 5.8
+Requires at least: 6.5
 Tested up to: 6.7
+Requires PHP: 7.4
 Stable tag: 0.6
 License: GPLv3 or later
 

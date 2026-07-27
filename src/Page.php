@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5.6
+ * Admin page.
  *
  * @package wpml-to-polylang
  */

@@ -1,0 +1,32 @@
+name: Consistent versions
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    if: github.event.deleted == false
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
+          coverage: none
+
+      - name: Install Consistent Versions
+        run: |
+          composer global require --no-interaction --prefer-dist "szepeviktor/consistent-versions:^1.2"
+          echo "$(composer global config bin-dir --absolute)" >> "$GITHUB_PATH"
+
+      - name: Check version consistency
+        run: consistent-versions check
+
+      - name: Check Git tag
+        if: github.ref_type == 'tag'
+        run: consistent-versions check consistent-versions-tag.yaml

@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5.6
+ * Post import.
  *
  * @package wpml-to-polylang
  */
