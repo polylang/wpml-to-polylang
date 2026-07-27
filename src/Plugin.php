@@ -47,5 +47,20 @@ class Plugin {
 
 		$page = new Page( reset( $actions )->getName() );
 		$page->addHooks();
+
+		add_action( 'pll_init', [ $this, 'fixConflicts' ], 999 ); // After PLLWC.
+	}
+
+	/**
+	 * Prevent Polylang for WooCommerce to create default product categories.
+	 *
+	 * @since 0.7
+	 *
+	 * @return void
+	 */
+	public function fixConflicts() {
+		if ( function_exists( 'PLLWC' ) ) {
+			remove_action( 'admin_init', [ PLLWC(), 'maybe_upgrade' ] );
+		}
 	}
 }
