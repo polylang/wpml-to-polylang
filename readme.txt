@@ -1,11 +1,11 @@
 === WPML to Polylang ===
-Contributors: Chouby
+Contributors: Chouby, greglone
 Donate link: https://polylang.pro
 Tags: Polylang, WPML, importer, multilingual, bilingual
 Requires at least: 6.5
-Tested up to: 6.7
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.6
+Stable tag: 0.7
 License: GPLv3 or later
 
 Import multilingual data from WPML into Polylang.
@@ -18,6 +18,7 @@ Import multilingual data from WPML into Polylang.
 * Imports posts and terms languages as well as translations (including for custom post types and custom taxonomies).
 * Imports multilingual nav menus.
 * Imports strings translations.
+* Imports ACF fields translation options.
 * Does not delete WPML data.
 
 = Important =
@@ -33,17 +34,21 @@ Although WPML data should not be corrupted, as Polylang data are created without
 * De-activate WPML to Polylang (You can even delete it).
 * Setup a language switcher either as a widget or in nav menus.
 * Check that everything is OK.
-* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in the Plugins table. To delete all data created for Polylang, Please read [how](https://polylang.pro/doc/how-to-uninstall-polylang/) **before** deleting Polylang. Finally you can re-activate WPML.
+* If something went wrong and you want to revert to WPML, you can delete Polylang using the red link in the Plugins table. To delete all data created for Polylang, Please read [how](https://polylang.pro/documentation/support/faq/#how-to-uninstall-polylang) **before** deleting Polylang. Finally you can re-activate WPML.
 
 = Notes =
 
 This plugin does not include error management. It has however been tested successfully to migrate a site with about 9,000 posts and media.
 
-= Credits =
-
-The banner and icon were designed by [Alex Lopez](http://www.alexlopez.rocks/)
-
 == Changelog ==
+
+= 0.7 (2026-08-10) =
+
+* Min Polylang version is now 3.8
+* Add compatibility with ACF Multilingual #25
+* Fix translated post types #24
+* Fix flags not added to languages #31
+* Fix database error with WooCommerce product categories #32
 
 = 0.6 (2023-08-10) =
 
@@ -121,3 +126,7 @@ The banner and icon were designed by [Alex Lopez](http://www.alexlopez.rocks/)
 = 0.1.1 (2014-05-01) =
 
 * Bug fixes
+
+= 0.1 (2013-12-29) =
+
+* Initial release
