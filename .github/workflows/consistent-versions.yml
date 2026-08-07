@@ -14,5 +14,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Temporary: point at the working branch until polylang/actions#23 is merged.
-      - uses: polylang/actions/consistent-versions@feat/consistent-versions-action
+      - uses: polylang/actions/consistent-versions@main
