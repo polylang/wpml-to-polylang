@@ -1,0 +1,17 @@
+name: Consistent versions
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    if: github.event.deleted == false
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: polylang/actions/consistent-versions@main

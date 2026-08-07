@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5.6
+ * Import objects without a language.
  *
  * @package wpml-to-polylang
  */

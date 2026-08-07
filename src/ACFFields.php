@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5.6
+ * Advanced Custom Fields import.
  *
  * @package wpml-to-polylang
  */

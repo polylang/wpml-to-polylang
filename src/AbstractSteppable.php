@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5.6
+ * Base steppable action implementation.
  *
  * @package wpml-to-polylang
  */

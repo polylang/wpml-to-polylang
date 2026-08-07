@@ -1,0 +1,58 @@
+checks:
+  release-version:
+    normalize: version
+    expected:
+      reader: php
+      file: wpml-to-polylang.php
+      path: $.constants.WPML_TO_POLYLANG_VERSION
+    values:
+      plugin-header:
+        reader: wordpress-plugin
+        file: wpml-to-polylang.php
+        path: $.Version
+      wordpress-readme:
+        reader: wordpress-readme
+        file: readme.txt
+        path: $['Stable tag']
+
+  minimum-php:
+    normalize: version
+    expected:
+      reader: composer
+      file: composer.json
+      path: $.require.php
+      normalize: composer-minimum
+    values:
+      plugin-header:
+        reader: wordpress-plugin
+        file: wpml-to-polylang.php
+        path: $['Requires PHP']
+      wordpress-readme:
+        reader: wordpress-readme
+        file: readme.txt
+        path: $['Requires PHP']
+      phpcs:
+        reader: phpcs
+        file: phpcs.xml.dist
+        path: $.config.testVersion
+        normalize: composer-minimum
+
+  minimum-wordpress:
+    normalize: version
+    expected:
+      reader: php
+      file: wpml-to-polylang.php
+      path: $.constants.WPML_TO_POLYLANG_MIN_WP_VERSION
+    values:
+      plugin-header:
+        reader: wordpress-plugin
+        file: wpml-to-polylang.php
+        path: $['Requires at least']
+      wordpress-readme:
+        reader: wordpress-readme
+        file: readme.txt
+        path: $['Requires at least']
+      phpcs:
+        reader: phpcs
+        file: phpcs.xml.dist
+        path: $.config.minimum_supported_wp_version

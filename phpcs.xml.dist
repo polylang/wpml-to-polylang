@@ -14,6 +14,7 @@
 	<config name="minimum_supported_wp_version" value="6.5"/>
 
 	<rule ref="Polylang">
+		<exclude name="PEAR.Commenting.FileComment.MissingVersion" />
 		<exclude name="Squiz.PHP.GlobalKeyword.NotAllowed" />
 		<exclude name="WordPress.DB.DirectDatabaseQuery.DirectQuery" />
 		<exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching" />
